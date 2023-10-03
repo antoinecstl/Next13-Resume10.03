@@ -84,7 +84,7 @@ export default function Cv() {
                         <div className="flex flex-col justify-center w-full">
                             <h3 className="text-xl md:text-2xl font-bold mb-2">California State University Long Beach - Computer Science</h3>
                             <p className="text-xs md:text-sm mb-2 font-bold">Août 2023 - Déc 2023 | Long Beach, CA, USA</p>
-                            <p className='mb-4 md:mb-8 mt-3 md:mt-7 text-sm md:text-base font-semibold'>Semestre d’étude a l’international dans le cadre de mon cursus à l’IPSA.</p>
+                            <p className='mb-4 md:mb-8 mt-3 md:mt-7 text-sm md:text-base font-semibold'>Semestre d’étude à l’international dans le cadre de mon cursus à l’IPSA.</p>
                             <div className='text-sm md:text-base flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
                                 <a className='font-bold mb-2'>Matières étudiées :</a> 
                                 <p>Computer Security, Computer Forensics, Network and Distributed Computing, Machine Learning</p>
@@ -228,7 +228,7 @@ export default function Cv() {
                         <div className='flex flex-col justify-center w-full'>
                             <h3 className="text-xl md:text-2xl font-bold mb-2">Centres d'intérêt</h3>
                             <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                <p>Capture The Flag</p>
+                                <p>CTF (Capture The Flag)</p>
                             </div>
                             <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
                                 <p>Drone FPV (First Person View)</p>

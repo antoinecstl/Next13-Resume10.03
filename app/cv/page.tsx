@@ -37,7 +37,7 @@ export default function Cv() {
             <section className="mb-12">
                 <h2 className="text-2xl md:text3-xl font-semibold mb-2 md:mb-4">À propos de moi</h2>
                 <div className='text-sm md:text-base'>
-                    <p className='italic'>20 ans, sérieux, motivé et polyvalent.</p>
+                    <p className='italic'>21 ans, sérieux, motivé et polyvalent.</p>
                     <p>Passionné d'informatique et de cybersécurité, je vise une carrière dans ce secteur.</p>
                     <p>Actuellement à la recherche d'un stage en Cybersécurité/Informatique d'une durée minimale de 10 semaines.</p>
                 </div>

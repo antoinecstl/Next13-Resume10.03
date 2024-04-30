@@ -1,6 +1,4 @@
 "use client"
-import RootLayout from '../layout';
-import Image from 'next/image';
 
 export default function Cv() {
 
@@ -39,7 +37,6 @@ export default function Cv() {
                 <div className='text-sm md:text-base'>
                     <p className='italic'>21 ans, sérieux, motivé et polyvalent.</p>
                     <p>Passionné d'informatique et de cybersécurité, je vise une carrière dans ce secteur.</p>
-                    <p>Actuellement à la recherche d'un stage en Cybersécurité/Informatique d'une durée minimale de 10 semaines.</p>
                 </div>
             </section>
             

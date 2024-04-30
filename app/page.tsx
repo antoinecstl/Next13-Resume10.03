@@ -1,5 +1,3 @@
-// pages/index.tsx
-
 const imageSources = [
     "key.svg",
     "git.svg",
@@ -58,11 +56,6 @@ export default function Home() {
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-8">Bienvenue sur le site d'Antoine CASTEL.</h1>
                 <p className="text-lg sm:text-xl md:text-2xl mb-4">
                     Étudiant en quatrième année, filière Signaux et Systèmes à l'IPSA.
-                </p>
-            </div>
-            <div className="mt-8 bg-zinc-800/80 rounded-lg p-5 w-full max-w-md mx-auto text-center">
-                <p className="text-lg font-bold">
-                    À la recherche d'un stage en Cybersécurité d'une durée minimale de 10 semaines.
                 </p>
             </div>
         </div>

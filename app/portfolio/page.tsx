@@ -7,6 +7,15 @@ export default function Cv() {
             {/* Section Projets Personnels */}
             <section className="mb-16">
                 <h2 className="text-3xl font-semibold mb-4">Projets Personnels</h2>
+                <div className="mb-8">
+                    <a href="https://github.com/antoinecstl/Sharips-Deploy-Next13" target="_blank" rel="noopener noreferrer" className="w-full lg:w-1/2">
+                        <div className="bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 relative hover:scale-95 transition-transform hover:border h-full">
+                            <h3 className="text-2xl font-bold mb-2">Sharips</h3>
+                            <img className="absolute top-0 right-0 m-4" src="git.svg" alt="Github" width="25" height="25" />
+                            <p>Plateforme web collaborative de type cloud, conçue spécifiquement pour les étudiants, facilitant le stockage, le partage et la collaboration en temps réel sur des cours et du matériel scolaire. </p>
+                        </div>
+                    </a>
+                </div>
                 <div className='mb-2 flex flex-col space-y-8 lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 items-stretch'>
                     <a href="https://github.com/antoinecstl/Gestiopass" target="_blank" rel="noopener noreferrer" className="w-full lg:w-1/2">
                         <div className="bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 relative hover:scale-95 transition-transform hover:border h-full">

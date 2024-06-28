@@ -15,12 +15,12 @@ export default function Cv() {
             <header className="flex items-center justify-evenly mb-12">
                 <div className='mr-4'>
                     <h1 className="text-2xl md:text-3xl font-bold">Antoine CASTEL</h1>
-                    <p className="text-base md:text-xl">Etudiant en quatrième année filière Signaux et Systèmes à l'IPSA</p>
+                    <p className="text-base md:text-xl">Etudiant en cinquième année en double diplôme Architecture des systèmes informatique à CentraleSupélec </p>
                 </div>
                 <div style={{ width: '250px', height: '250px' }}>
                 <img
                     className="rounded-full border-2 border-zinc-900"
-                    src="/myhead.jpg"
+                    src="/Photo_Pro.jpg"
                     alt="Antoine CASTEL"
                     style={{
                         width: '100%',
@@ -35,7 +35,7 @@ export default function Cv() {
             <section className="mb-12">
                 <h2 className="text-2xl md:text3-xl font-semibold mb-2 md:mb-4">À propos de moi</h2>
                 <div className='text-sm md:text-base'>
-                    <p className='italic'>21 ans, sérieux, motivé et polyvalent.</p>
+                    <p className='italic'>22 ans, sérieux, motivé et polyvalent.</p>
                     <p>Passionné d'informatique et de cybersécurité, je vise une carrière dans ce secteur.</p>
                 </div>
             </section>
@@ -43,6 +43,18 @@ export default function Cv() {
             {/* Section Expérience */}
             <section className="mb-8 md:mb-12">
                 <h2 className="text-2xl md:text3-xl font-semibold mb-5">Expérience</h2>
+                <div className="mb-8 w-full">
+                    <div className="bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 h-full">
+                        <h3 className="text-xl md:text-2xl font-bold mb-2">Consultant Stagiaire Cybersécurité - Ernst & Young Advisory</h3>
+                        <p className="text-xs md:text-sm mb-4 font-bold ">13 Semaines | Juin 2024 - Septembre 2023 | Tour First, Paris La Défense, France </p>
+                        <p className='text-sm md:text-base mb-4'>Participation aux missions de la branche Cybersécurité d'EY Advisory.</p>
+                        <div className='text-sm md:text-base flex-1 mb-8 bg-zinc-800/80 rounded-lg p-3 md:p-5'>
+                            <p>- Préparation d'un Audit SSI sous le framework CPA d'EY pour une entreprise du CAC40 (Récupération et mise en forme des 510 questions du CPA, Questionnaire par branche du framework, Introduction d'une nouvelle partie de questiion liée à l'IA et au Zéro Trust, Préparation des Compte rendu et Flash Reports).</p>
+                            <p>- Formation au badge Cybersécurité Bronze d'EY (Risk Management for Cybersecurity and IT, Social Engineering, Phishing, ISO27001 Auditor, Forensics, ...).</p>
+                            <p>- Développement d'un outil d'automatisation de la génération du Cyber Threat Bulletin hebdomadaire de l'entreprise.</p>
+                        </div>   
+                    </div>
+                </div>
                 <div className="flex flex-col lg:flex-row items-stretch space-y-8 lg:space-y-0 lg:space-x-8">
                     <div className="flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                         <div className="flex flex-col justify-center items-center w-full">
@@ -265,9 +277,13 @@ export default function Cv() {
             <footer>
                 <h2 className="text-2xl md:text-3xl font-semibold mb-6 md:mb-16">Contactez-moi :</h2>
                 <div className='flex flex-col lg:flex-row justify-center items-center space-y-8 lg:space-y-0 lg:space-x-8'>
-                    <div className="flex-1 flex justify-center items-center -mb-1 lg:mb-0">
+                    <div className="flex-1 flex justify-center items-center -mb-1 lg:mb-0 hover:scale-95">
+                        <a href="mailto:antoine.castel@ipsa.fr">
                             <img className="mr-2" src="mail.svg" alt="Email" width="36" height="36"/>
+                        </a>
+                        <a href="mailto:antoine.castel@ipsa.fr">
                             <p> antoine.castel@ipsa.fr</p>
+                        </a>
                     </div>
                     <div className="flex-1 flex justify-center items-center lg:mb-0">
                         <img className="mr-2" src="phone.svg" alt="Phone" width="32" height="32"/>

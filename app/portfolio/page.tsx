@@ -1,4 +1,4 @@
-export default function Cv() {
+ export default function Cv() {
     return (
         <main className="flex flex-col min-h-screen p-8 md:p-24 bg-gradient-to-t from-gray-900 to-black">  
        

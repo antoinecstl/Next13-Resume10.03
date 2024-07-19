@@ -11,11 +11,11 @@ export default function Cv() {
     }
     
     return (
-        <main className="flex flex-col min-h-screen p-8 md:p-24 bg-gradient-to-t from-gray-900 to-black">
+        <main className="flex flex-col min-h-screen p-8 md:p-24 bg-gradient-to-t from-slate-950 to-gray-950">
             <header className="flex items-center justify-evenly mb-12">
                 <div className='mr-4'>
                     <h1 className="text-2xl md:text-3xl font-bold">Antoine CASTEL</h1>
-                    <p className="text-base md:text-xl">Etudiant en cinquième année en double diplôme Architecture des systèmes informatique à CentraleSupélec </p>
+                    <p className="text-base md:text-xl">Etudiant en cinquième année en double diplôme Architecture des Systèmes Informatiques à CentraleSupélec | IPSA.</p>
                 </div>
                 <div style={{ width: '250px', height: '250px' }}>
                 <img
@@ -49,9 +49,9 @@ export default function Cv() {
                         <p className="text-xs md:text-sm mb-4 font-bold ">13 Semaines | Juin 2024 - Septembre 2023 | Tour First, Paris La Défense, France </p>
                         <p className='text-sm md:text-base mb-4'>Participation aux missions de la branche Cybersécurité d'EY Advisory.</p>
                         <div className='text-sm md:text-base flex-1 mb-8 bg-zinc-800/80 rounded-lg p-3 md:p-5'>
-                            <p>- Préparation d'un Audit SSI sous le framework CPA d'EY pour une entreprise du CAC40 (Récupération et mise en forme des 510 questions du CPA, Questionnaire par branche du framework, Introduction d'une nouvelle partie de questiion liée à l'IA et au Zéro Trust, Préparation des Compte rendu et Flash Reports).</p>
+                            <p>- Participation à un Audit SSI sous le framework CPA d'EY pour une entreprise du CAC40 (Récupération et mise en forme des 510 questions du CPA, Questionnaire par branche du framework, Introduction d'une nouvelle partie de question liée à l'IA et au Zéro Trust, Préparation des Compte rendu et Flash Reports).</p>
                             <p>- Formation au badge Cybersécurité Bronze d'EY (Risk Management for Cybersecurity and IT, Social Engineering, Phishing, ISO27001 Auditor, Forensics, ...).</p>
-                            <p>- Développement d'un outil d'automatisation de la génération du Cyber Threat Bulletin hebdomadaire de l'entreprise.</p>
+                            <p>- Développement et mise en production d'un outil d'automatisation de la génération du Cyber Threat Bulletin hebdomadaire de l'entreprise.</p>
                         </div>   
                     </div>
                 </div>

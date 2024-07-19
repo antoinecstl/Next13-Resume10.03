@@ -50,12 +50,12 @@ const backgroundImages = Array(25).fill(null).map((_, index) => {
 
 export default function Home() {
     return (
-        <div className="bg-gradient-to-t from-gray-900 to-black flex flex-col items-center justify-center min-h-screen text-white p-4">
+        <div className="bg-gradient-to-t from-slate-950 to-gray-950 flex flex-col items-center justify-center min-h-screen text-white p-4">
             {backgroundImages}
             <div className="text-center mx-auto px-4">
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-8">Bienvenue sur le site d'Antoine CASTEL.</h1>
                 <p className="text-lg sm:text-xl md:text-2xl mb-4">
-                    Étudiant en architecture des systèmes informatiques à Centrale Supélec.
+                    Étudiant en double dimplôme Architecture des Systèmes Informatiques à CentraleSupélec | IPSA.
                 </p>
             </div>
         </div>

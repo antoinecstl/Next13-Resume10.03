@@ -225,7 +225,7 @@ export default function Cv() {
                             </div>
                             <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
                                 <a className='font-bold mb-2'>Anglais :</a>
-                                <p>Fluent - Toeic (945 points)</p>
+                                <p>Fluent - Toeic (980 points)</p>
                             </div>
                             <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
                                 <a className='font-bold mb-2'>Espagnol :</a>

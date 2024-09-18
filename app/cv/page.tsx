@@ -36,7 +36,7 @@ export default function Cv() {
                 <h2 className="text-2xl md:text3-xl font-semibold mb-2 md:mb-4">À propos de moi</h2>
                 <div className='text-sm md:text-base'>
                     <p className='italic'>22 ans, sérieux, motivé et polyvalent.</p>
-                    <p>Passionné d'informatique et de cybersécurité, je vise une carrière dans ce secteur.</p>
+                    <p>Passionné d'informatique, je vise une carrière dans ce secteur.</p>
                 </div>
             </section>
             
@@ -88,6 +88,17 @@ export default function Cv() {
             {/* Section Éducation */}
             <section className="mb-8 md:mb-12">
                 <h2 className="text-2xl md:text3-xl font-semibold mb-4">Formation</h2>
+                <div className="mb-8 w-full">
+                    <div className="bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 h-full">
+                        <h3 className="text-xl md:text-2xl font-bold mb-2">CentraleSupélec - Mention Architecture des Systèmes Informatique</h3>
+                        <p className="text-xs md:text-sm mb-4 font-bold "> Septembre 2024 - Avril 2025 | Paris, France </p>
+                        <p className='mb-4 mt-4 text-sm md:text-base font-semibold'>Préparation d'un double diplome de spécialisation, Mention Architecture des Systèmes Informatique, Dominante Informatique et Numérique </p>
+                        <div className='text-sm md:text-base flex-1 mb-8 bg-zinc-800/80 rounded-lg p-3 md:p-5 hover:bg-zinc-950/20'>
+                            <a className='font-bold mb-2'>Matières étudiées :</a> 
+                            <p>Algorithmie avancée, Systèmes d'exploitation, Modélisation des risques et des attaques, Economie et pilotage de l'IT, Etude de cas business et technique, Architectures applicatives, Infrastructures modernes, Architecture matérielles, Systèmes concurrents et répartis, Programmatrion et outils de développement, Droit éthique et vie privée</p>
+                        </div>   
+                    </div>
+                </div>
                 <div className='flex flex-col lg:flex-row items-stretch space-y-8 lg:space-y-0 lg:space-x-8'>
                     <div className="flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
                         <div className="flex flex-col justify-center w-full">
@@ -225,7 +236,7 @@ export default function Cv() {
                             </div>
                             <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
                                 <a className='font-bold mb-2'>Anglais :</a>
-                                <p>Fluent - Toeic (945 points)</p>
+                                <p>Fluent - Toeic (980 points)</p>
                             </div>
                             <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
                                 <a className='font-bold mb-2'>Espagnol :</a>
@@ -258,7 +269,7 @@ export default function Cv() {
                             <h3 className="text-xl md:text-2xl font-bold mb-2">Informations Personnelles</h3>
                             <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
                                 <a className='font-bold mb-2'>Adresse :</a>
-                                <p>16 Rue Georges Bizet, 91230, Montgeron</p>
+                                <p>Paris 14ème</p>
                             </div>
                             <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
                                 <a className='font-bold mb-2'>Locomotion :</a>
@@ -281,8 +292,8 @@ export default function Cv() {
                         <a href="mailto:antoine.castel@ipsa.fr">
                             <img className="mr-2" src="mail.svg" alt="Email" width="36" height="36"/>
                         </a>
-                        <a href="mailto:antoine.castel@ipsa.fr">
-                            <p> antoine.castel@ipsa.fr</p>
+                        <a href="mailto:antoine.castel@student-cs.fr">
+                            <p> antoine.castel@student-cs.fr</p>
                         </a>
                     </div>
                     <div className="flex-1 flex justify-center items-center lg:mb-0">

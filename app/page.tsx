@@ -55,7 +55,7 @@ export default function Home() {
             <div className="text-center mx-auto px-4">
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-8">Bienvenue sur le site d'Antoine CASTEL.</h1>
                 <p className="text-lg sm:text-xl md:text-2xl mb-4">
-                    Étudiant en double dimplôme Architecture des Systèmes Informatiques à CentraleSupélec | IPSA.
+                    Étudiant en double diplôme Architecture des Systèmes Informatiques à CentraleSupélec | IPSA.
                 </p>
             </div>
         </div>

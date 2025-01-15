@@ -17,7 +17,7 @@ const getRandomCoordinates = () => {
     let top: number, left: number;
 
     do {
-        top = Math.random() * 100;
+        top = Math.random() * 88;
         left = Math.random() * 90;
     } while (
         usedCoordinates.some(

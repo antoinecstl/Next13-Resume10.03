@@ -23,25 +23,27 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={inter.className}>
-        <nav className="p-4 sm:p-8 mb-1 bg-gray-950">
-          <ul className="flex flex-row justify-evenly gap-4 font-semibold">
-            <li>
-              <Link href="/" passHref>
-                <button className={`${hoverStyles} ${pathname === '/' ? activeButtonStyles : navButtonStyles}`}>Accueil</button>
-              </Link>
-            </li>
-            <li>
-              <Link href="/cv" passHref>
-                <button className={`${hoverStyles} ${pathname === '/cv' ? activeButtonStyles : navButtonStyles}`}>CV</button>
-              </Link>
-            </li>
-            <li>
-              <Link href="/portfolio" passHref>
-                <button className={`${hoverStyles} ${pathname === '/portfolio' ? activeButtonStyles : navButtonStyles}`}>Portfolio</button>
-              </Link>
-            </li>
-          </ul>
-        </nav>
+        {pathname !== '/' && (
+          <nav className="p-4 sm:p-8 mb-1 bg-gray-950">
+            <ul className="flex flex-row justify-evenly gap-4 font-semibold">
+              <li>
+                <Link href="/" passHref>
+                  <button className={`${hoverStyles} ${pathname === '/' ? activeButtonStyles : navButtonStyles}`}>Accueil</button>
+                </Link>
+              </li>
+              <li>
+                <Link href="/cv" passHref>
+                  <button className={`${hoverStyles} ${pathname === '/cv' ? activeButtonStyles : navButtonStyles}`}>CV</button>
+                </Link>
+              </li>
+              <li>
+                <Link href="/portfolio" passHref>
+                  <button className={`${hoverStyles} ${pathname === '/portfolio' ? activeButtonStyles : navButtonStyles}`}>Portfolio</button>
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        )}
         {children}
         <Analytics />
       </body>

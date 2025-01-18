@@ -111,7 +111,7 @@ export default function Home() {
                             <div key={index}>{line}</div>
                         ))}
                         <div className="flex">
-                            <span className="mr-2">></span>
+                            <span className="mr-2">{'>'}</span>
                             <input
                                 className="flex-1 bg-transparent focus:outline-none"
                                 value={inputValue}

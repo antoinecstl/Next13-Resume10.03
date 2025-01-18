@@ -8,6 +8,12 @@
   --background-end-rgb: 0, 0, 0;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; 
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -29,5 +35,28 @@ body {
 }
 .overflow-x-auto {
   scroll-behavior: smooth;
+}
+
+.overflow-y-auto {
+  scroll-behavior: smooth;
+  max-height: 100%;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 1s ease-in-out;
+}
+
+.animate-slideIn {
+    animation: slideIn 1s ease-in-out;
 }
 

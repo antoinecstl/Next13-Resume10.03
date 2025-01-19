@@ -101,7 +101,7 @@ export default function Home() {
     
 
     return (
-        <main className="snap-y snap-mandatory h-screen overflow-y-scroll bg-gradient-to-t from-slate-950 to-gray-950 animate-fadeIn text-white space-y-64 px-4 sm:px-8" >
+        <main className="snap-y snap-mandatory h-screen overflow-y-scroll bg-gradient-to-t from-slate-950 to-gray-950 animate-fadeIn text-white space-y-64 px-8" >
             {/* Terminal Section */}
             <section className=" min-h-screen flex flex-col justify-center container  pb-64" onClick={() => inputRef.current?.focus()} >
                 {backgroundImages}

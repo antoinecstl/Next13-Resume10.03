@@ -153,7 +153,7 @@ export default function Home() {
                     <section className="flex flex-col justify-center min-h-screen mb-8 md:mb-12 py-72">
                         <div className="sm:snap-center">
                             <h2 className="snap-start sm:snap-align-none pt-8 text-2xl md:text3-xl font-semibold mb-5">Expérience</h2>
-                            <div className="mb-8 w-full">
+                            <div className="snap-center sm:snap-align-none mb-8 w-full">
                                 <div className=" bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 h-full">
                                     <h3 className="text-xl md:text-2xl font-bold mb-2">Consultant Stagiaire Cybersécurité - Ernst & Young Advisory</h3>
                                     <p className="text-xs md:text-sm mb-4 font-bold ">13 Semaines | Juin 2024 - Septembre 2023 | Tour First, Paris La Défense, France </p>
@@ -200,7 +200,7 @@ export default function Home() {
                     <section className="flex flex-col justify-center min-h-screen mb-8 md:mb-12 py-72">
                         <div className="sm:snap-center">
                             <h2 className="snap-start sm:snap-align-none pt-8 text-2xl md:text3-xl font-semibold mb-4">Formation</h2>
-                            <div className="mb-8 w-full">
+                            <div className="snap-center sm:snap-align-none mb-8 w-full">
                                 <div className="bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 h-full">
                                     <h3 className="text-xl md:text-2xl font-bold mb-2">CentraleSupélec - Mention Architecture des Systèmes Informatique</h3>
                                     <p className="text-xs md:text-sm mb-4 font-bold "> Septembre 2024 - Avril 2025 | Paris, France </p>
@@ -418,7 +418,7 @@ export default function Home() {
                                 </div>
                                 <div className='mb-2 flex flex-col space-y-8 lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 items-stretch'>
                                     <a href="https://github.com/antoinecstl/Gestiopass" target="_blank" rel="noopener noreferrer" className="w-full lg:w-1/2">
-                                        <div className=" bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 relative hover:scale-95 transition-transform hover:border h-full">
+                                        <div className="snap-center sm:snap-align-none bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 relative hover:scale-95 transition-transform hover:border h-full">
                                             <h3 className="text-2xl font-bold mb-2">Gestiopass</h3>
                                             <img className="absolute top-0 right-0 m-4" src="git.svg" alt="Github" width="25" height="25" />
                                             <p>Logiciel de stockage de mots de passe chiffré conçu pour fonctionner en local. Les données sont stockées localement sur l'appareil de l'utilisateur plutôt que sur un serveur distant. Cela permet de conserver le contrôle total sur leurs mots de passe et d'éviter de confier leurs informations sensibles à des tiers. </p>

@@ -183,7 +183,7 @@ const translations: Record<Language, Translations> = {
     },
     fr: {
         welcome: "- Bienvenue",
-        help: "- Tapez 'help' pour voir les commandes disponibles.",
+        help: "- Entrez 'help' pour voir les commandes disponibles.",
         scroll: "- ... ou faites défiler pour en voir plus.",
         commands: "- Commandes: help, clear, about, whois, experience, formation, competence, projet, contact",
         unknownCommand: "- Commande inconnue, tapez 'help' pour voir les commandes disponibles.",
@@ -385,12 +385,12 @@ export default function Home() {
     
 
     return (
-        <main className="snap-y snap-mandatory h-screen overflow-y-scroll bg-gradient-to-t from-slate-950 to-gray-950 animate-fadeIn text-white space-y-64 px-8" >
+        <main className="snap-y snap-mandatory h-screen overflow-y-scroll bg-gradient-to-t from-slate-950 to-gray-950 animate-fadeIn text-white space-y-32 md:space-y-64 px-8 md:px-16" >
             {/* Terminal Section */}
-            <section className=" min-h-screen flex flex-col justify-center container  pb-64" onClick={() => inputRef.current?.focus()} >
+            <section className="min-h-screen flex flex-col justify-center container pb-32 md:pb-64" onClick={() => inputRef.current?.focus()} >
                 {backgroundImages}
                 <div className="snap-start w-full rounded-lg shadow-lg animate-slideIn flex flex-row">
-                    <div className="flex-1 overflow-y-auto font-mono mb-2 pt-16">
+                    <div className="flex-1 overflow-y-auto font-mono mb-2 pt-8 md:pt-16">
                         {terminalOutput.map((line, index) => (
                             <div key={index}>{line}</div>
                         ))}
@@ -408,7 +408,7 @@ export default function Home() {
                     </div>
                     <button
                         onClick={toggleLanguage}
-                        className="bg-gray-900 hover:bg-gray-800 p-2 rounded-lg h-min flex items-center space-x-2 mt-8"
+                        className="bg-gray-900 hover:bg-gray-800 p-2 rounded-lg h-min flex items-center space-x-2 mt-4 md:mt-8"
                     >
                         {language === "fr" ? (
                             <>
@@ -425,11 +425,11 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="whois" className="flex flex-col min-h-screen container animate-fadeIn py-64">
+            <section id="whois" className="flex flex-col min-h-screen container animate-fadeIn py-32 md:py-64">
                 {/* First Main Section (CV) */}
                 <main className="flex flex-col min-h-screen container animate-slideIn">
                     <header className="snap-center flex flex-col items-center justify-center min-h-screen "> 
-                        <div className="w-48 h-48 md:w-64 md:h-64 mb-4 md:mb-8">
+                        <div className="w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 mb-4 md:mb-8">
                             <img
                                 className="rounded-full border-2 border-zinc-900 opacity-90"
                                 src="/Photo_Pro.jpg"
@@ -442,46 +442,45 @@ export default function Home() {
                             />
                         </div>
                         <div className='mr-4'>
-                            <h1 className="text-2xl md:text-3xl font-bold">Antoine CASTEL</h1>
-                            <p className="text-base md:text-xl">{translations[language].student}</p>
+                            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">Antoine CASTEL</h1>
+                            <p className="text-sm md:text-base lg:text-xl">{translations[language].student}</p>
                         </div>
                     </header>
                     
                     {/* Section Expérience */}
-                    <section id="experience" className="flex flex-col justify-center min-h-screen mb-8 md:mb-12 py-72">
-                        <div className="sm:snap-center">
-                            <h2 className="snap-start sm:snap-align-none pt-8 text-2xl md:text3-xl font-semibold mb-5">{translations[language].experience}</h2>
-                            <div className="snap-center sm:snap-align-none mb-8 w-full">
-                                <div className=" bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 h-full">
-                                    <h3 className="text-xl md:text-2xl font-bold mb-2">{translations[language].eyTitle}</h3>
+                    <section id="experience" className="flex flex-col justify-center min-h-screen mb-8 md:mb-12 py-32 md:py-72">
+                            <h2 className="snap-start pt-8 text-xl md:text-2xl lg:text-3xl font-semibold mb-5">{translations[language].experience}</h2>
+                            <div className="snap-center xl:snap-align-none mb-8 w-full">
+                                <div className="bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 h-full">
+                                    <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].eyTitle}</h3>
                                     <p className="text-xs md:text-sm mb-4 font-bold ">{translations[language].eyDuration}</p>
                                     <p className='text-sm md:text-base mb-4'>{translations[language].eyDescription}</p>
-                                    <div className='text-sm md:text-base flex-1 mb-8 bg-zinc-800/80 rounded-lg p-3 md:p-5'>
+                                    <div className='text-sm md:text-base flex-1 mb-2 bg-zinc-800/80 rounded-lg p-3 md:p-5'>
                                         {(translations[language].eyDetails as string[]).map((detail, index) => (
                                             <p key={index}>{detail}</p>
                                         ))}
                                     </div>   
                                 </div>
                             </div>
-                            <div className="flex flex-col lg:flex-row items-stretch space-y-8 lg:space-y-0 lg:space-x-8">
-                                <div className="snap-center sm:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                            <div className="xl:snap-center flex flex-col xl:flex-row items-stretch space-y-8 xl:space-y-0 xl:space-x-8">
+                                <div className="snap-center xl:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                     <div className="flex flex-col justify-center items-center w-full">
-                                        <h3 className="text-xl md:text-2xl font-bold mb-2">{translations[language].docaposteTitle}</h3>
+                                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].docaposteTitle}</h3>
                                         <p className="text-xs md:text-sm mb-4 font-bold ">{translations[language].docaposteDuration}</p>
                                         <p className='text-sm md:text-base mb-4'>{translations[language].docaposteDescription}</p>
-                                        <div className='text-sm md:text-base flex-1 mb-8 bg-zinc-800/80 rounded-lg p-3 md:p-5'>
+                                        <div className='text-sm md:text-base flex-1 mb-2 bg-zinc-800/80 rounded-lg p-3 md:p-5'>
                                             {(translations[language].docaposteDetails as string[]).map((detail, index) => (
                                                 <p key={index}>{detail}</p>
                                             ))}
                                         </div>
                                     </div>
                                 </div>
-                                <div className="snap-center sm:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                <div className="snap-center xl:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                     <div className="flex flex-col justify-center items-center w-full">
-                                        <h3 className="text-xl md:text-2xl font-bold mb-2">{translations[language].mpeTitle}</h3>
+                                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].mpeTitle}</h3>
                                         <p className="text-xs md:text-sm mb-4 font-bold ">{translations[language].mpeDuration}</p>
                                         <p className='text-sm md:text-base mb-4'>{translations[language].mpeDescription}</p>
-                                        <div className=' text-sm md:text-base flex-1 mb-8 bg-zinc-800/80 rounded-lg p-3 md:p-5'>
+                                        <div className=' text-sm md:text-base flex-1 mb-2 bg-zinc-800/80 rounded-lg p-3 md:p-5'>
                                             {(translations[language].mpeDetails as string[]).map((detail, index) => (
                                                 <p key={index}>{detail}</p>
                                             ))}
@@ -489,28 +488,26 @@ export default function Home() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
                     </section>
                     
                     {/* Section Éducation */}
-                    <section id="formation" className="flex flex-col justify-center min-h-screen mb-8 md:mb-12 py-72">
-                        <div className="sm:snap-center">
-                            <h2 className="snap-start sm:snap-align-none pt-8 text-2xl md:text3-xl font-semibold mb-4">{translations[language].education}</h2>
-                            <div className="snap-center sm:snap-align-none mb-8 w-full">
-                                <div className="bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 h-full">
-                                    <h3 className="text-xl md:text-2xl font-bold mb-2">{translations[language].csTitle}</h3>
+                    <section id="formation" className="flex flex-col justify-center min-h-screen mb-8 md:mb-12 py-32 md:py-72">
+                            <h2 className="snap-start pt-8 text-xl md:text-2xl lg:text-3xl font-semibold mb-4">{translations[language].education}</h2>
+                            <div className="snap-center xl:snap-align-none mb-8 w-full">
+                                <div className="bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 h-full">
+                                    <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].csTitle}</h3>
                                     <p className="text-xs md:text-sm mb-4 font-bold ">{translations[language].csDuration}</p>
                                     <p className='mb-4 mt-4 text-sm md:text-base font-semibold'>{translations[language].csDescription}</p>
-                                    <div className='text-sm md:text-base flex-1 mb-8 bg-zinc-800/80 rounded-lg p-3 md:p-5 hover:bg-zinc-950/20'>
+                                    <div className='text-sm md:text-base flex-1 mb-2 bg-zinc-800/80 rounded-lg p-3 md:p-5 hover:bg-zinc-950/20'>
                                         <a className='font-bold mb-2'>{translations[language].csSubjects}</a> 
                                         <p>{translations[language].csSubjectsList}</p>
                                     </div>   
                                 </div>
                             </div>
-                            <div className='flex flex-col lg:flex-row items-stretch space-y-8 lg:space-y-0 lg:space-x-8'>
+                            <div className='xl:snap-center flex flex-col xl:flex-row items-stretch space-y-8 xl:space-y-0 xl:space-x-8'>
                                 <div className="flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
-                                    <div className="snap-center sm:snap-align-none flex flex-col justify-center w-full">
-                                        <h3 className="text-xl md:text-2xl font-bold mb-2">{translations[language].csulbTitle}</h3>
+                                    <div className="snap-center xl:snap-align-none flex flex-col justify-center w-full">
+                                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].csulbTitle}</h3>
                                         <p className="text-xs md:text-sm mb-2 font-bold">{translations[language].csulbDuration}</p>
                                         <p className='mb-4 md:mb-8 mt-3 md:mt-7 text-sm md:text-base font-semibold'>{translations[language].csulbDescription}</p>
                                         <div className='text-sm md:text-base flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
@@ -524,8 +521,8 @@ export default function Home() {
                                     </div>
                                 </div>
                                 <div className="flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
-                                    <div className="snap-center sm:snap-align-none flex flex-col justify-center w-full">
-                                        <h3 className="text-xl md:text-2xl font-bold mb-2">{translations[language].ipsaTitle}</h3>
+                                    <div className="snap-center xl:snap-align-none flex flex-col justify-center w-full">
+                                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].ipsaTitle}</h3>
                                         <p className="text-xs md:text-sm mb-2 font-bold">{translations[language].ipsaDuration}</p>
                                         <p className='mb-4 mt-4 text-sm md:text-base font-semibold'>{translations[language].ipsaDescription}</p>
                                         <div className='text-sm md:text-base flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
@@ -539,14 +536,12 @@ export default function Home() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
                     </section>
                     
                     {/* Section Compétence + Langues-Centres-InfoPerso */}
-                    <section id="competence" className="flex flex-col justify-center min-h-screen mb-8 md:mb-12 py-72">
-                        <div className="sm:snap-center">
-                            <div className="snap-start sm:snap-align-none pt-8">
-                                <h2 className="text-2xl md:text3-xl font-semibold mb-2 md:mb-4 pb-4">{translations[language].skills}</h2>
+                    <section id="competence" className="flex flex-col justify-center min-h-screen mb-8 md:mb-12 py-32 md:py-72">
+                            <div className="snap-start pt-8">
+                                <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold mb-2 md:mb-4 pb-4">{translations[language].skills}</h2>
                                 <div className="relative">
                                     <button className="-mx-8 absolute left-0 top-11 md:top-16 transform -translate-y-1/2" onClick={() => scrollCarousel(-1, 'programming-carousel')}>
                                         <svg width="30" height="30" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
@@ -554,31 +549,31 @@ export default function Home() {
                                         </svg>
                                     </button>
                                         <div className="flex overflow-x-auto hide-scroll-bar" id="programming-carousel">
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2">Python</h3>
                                                 <p className="text-sm mb-2 font-bold ">{translations[language].advanced}</p>
                                             </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2 ">C/C++</h3>
                                                 <p className="text-sm mb-2 font-bold">{translations[language].advanced}</p>
                                             </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2 ">Matlab</h3>
                                                 <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
                                             </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2 ">FPGA - VHDL</h3>
                                                 <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
                                             </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2 ">React - Javascript</h3>
                                                 <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
                                             </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2 ">HTML</h3>
                                                 <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
                                             </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2 ">R</h3>
                                                 <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
                                             </div>
@@ -596,31 +591,31 @@ export default function Home() {
                                         </svg>
                                     </button>
                                         <div className="flex overflow-x-auto hide-scroll-bar" id="skills-carousel">
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2 ">{translations[language].virtualization}</h3>
                                                 <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
                                             </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2 ">Linux (Kali,Ubuntu)</h3>
                                                 <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
                                             </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2 ">Windows 10/11</h3>
                                                 <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
                                             </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2 ">Google Cloud Platform</h3>
                                                 <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
                                             </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2 ">Powershell</h3>
                                                 <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
                                             </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2 ">GNS3</h3>
                                                 <p className="text-sm mb-2 font-bold">{translations[language].beginner}</p>
                                             </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
+                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
                                                 <h3 className="text-base md:text-xl font-bold mb-2">{translations[language].office}</h3>
                                                 <p className="text-sm mb-2 font-bold ">{translations[language].advanced}</p>
                                             </div>
@@ -633,10 +628,10 @@ export default function Home() {
                                 </div>
                             </div>
                             <div className="mt-8 mb-12">
-                                <div className="flex flex-col lg:flex-row items-stretch space-y-8 lg:space-y-0 lg:space-x-8">
-                                    <div className="snap-center sm:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
+                                <div className="lg:snap-center flex flex-col lg:flex-row items-stretch space-y-8 lg:space-y-0 lg:space-x-8">
+                                    <div className="snap-center lg:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
                                         <div className='flex flex-col justify-center w-full'>
-                                            <h3 className="text-xl md:text-2xl font-bold mb-2">{translations[language].languages}</h3>
+                                            <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].languages}</h3>
                                             <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
                                                 <a className='font-bold mb-2'>{translations[language].french}</a>
                                                 <p>{translations[language].frlevel}</p>
@@ -651,9 +646,9 @@ export default function Home() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="snap-center sm:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
+                                    <div className="snap-center lg:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
                                         <div className='flex flex-col justify-center w-full'>
-                                            <h3 className="text-xl md:text-2xl font-bold mb-2">{translations[language].interests}</h3>
+                                            <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].interests}</h3>
                                             <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
                                                 <p>{translations[language].ctf}</p>
                                             </div>
@@ -671,9 +666,9 @@ export default function Home() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="snap-center sm:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
+                                    <div className="snap-center lg:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
                                         <div className='flex flex-col justify-center w-full'>
-                                            <h3 className="text-xl md:text-2xl font-bold mb-2">{translations[language].personalInfo}</h3>
+                                            <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].personalInfo}</h3>
                                             <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
                                                 <a className='font-bold mb-2'>{translations[language].address} :</a>
                                                 <p>Paris 14ème</p>
@@ -688,7 +683,6 @@ export default function Home() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
                     </section>
                 </main>
             </section>
@@ -700,7 +694,7 @@ export default function Home() {
                     <main className="flex flex-col min-h-screen container">  
                     {/* Section Projets Personnels */}
                         <section className="mb-16 pt-8">
-                                <h2 className="snap-start sm:snap-align-none pt-8 text-3xl font-semibold mb-4">{translations[language].personalProjects}</h2>
+                                <h2 className="snap-start xl:snap-align-none pt-8 text-3xl font-semibold mb-4">{translations[language].personalProjects}</h2>
                                 <div className="mb-8 ">
                                     <a href="https://github.com/antoinecstl/Sharips-Deploy-Next13" target="_blank" rel="noopener noreferrer" className="w-full lg:w-1/2">
                                         <div className="bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 relative hover:scale-95 transition-transform hover:border h-full">
@@ -710,16 +704,16 @@ export default function Home() {
                                         </div>
                                     </a>
                                 </div>
-                                <div className='mb-2 flex flex-col space-y-8 lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 items-stretch'>
+                                <div className='lg:snap-center mb-2 flex flex-col space-y-8 lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 items-stretch'>
                                     <a href="https://github.com/antoinecstl/Gestiopass" target="_blank" rel="noopener noreferrer" className="w-full lg:w-1/2">
-                                        <div className="snap-center sm:snap-align-none bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 relative hover:scale-95 transition-transform hover:border h-full">
+                                        <div className="snap-center lg:snap-align-none bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 relative hover:scale-95 transition-transform hover:border h-full">
                                             <h3 className="text-2xl font-bold mb-2">{translations[language].gestiopass}</h3>
                                             <img className="absolute top-0 right-0 m-4" src="git.svg" alt="Github" width="25" height="25" />
                                             <p>{translations[language].gestiopassDescription}</p>
                                         </div>
                                     </a>
                                     <a href="https://github.com/antoinecstl/AutoSplit" target="_blank" rel="noopener noreferrer" className="w-full lg:w-1/2">
-                                        <div className="snap-center bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 relative hover:scale-95 transition-transform hover:border h-full">
+                                        <div className="snap-center lg:snap-align-none bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 relative hover:scale-95 transition-transform hover:border h-full">
                                             <h3 className="text-2xl font-bold mb-2">{translations[language].autosplit}</h3>
                                             <img className="absolute top-0 right-0 m-4" src="git.svg" alt="Github" width="25" height="25" />
                                             <p>{translations[language].autosplitDescription}</p>
@@ -737,11 +731,11 @@ export default function Home() {
                         </section>
 
                         {/* Section Projets Associatifs */}
-                        <section className="snap-align-none sm:snap-center mb-12">
+                        <section className="mb-12">
                             <h2 className="text-3xl font-semibold mb-4">{translations[language].associativeProjects}</h2>
                             <div className='flex flex-col space-y-8'>
                                 <a href="https://www.linkedin.com/company/ipsa-racing-team/" target="_blank" rel="noopener noreferrer">
-                                <div className="snap-center sm:snap-align-none focus:outline-none bg-zinc-800/60 rounded-lg p-8 relative hover:bg-zinc-800/80 hover:scale-95 transition-transform hover:border">
+                                <div className="snap-center focus:outline-none bg-zinc-800/60 rounded-lg p-8 relative hover:bg-zinc-800/80 hover:scale-95 transition-transform hover:border">
                                     <h3 className="text-2xl font-bold mb-2">{translations[language].ipsaRacingTeam}</h3>
                                     <img className="absolute top-0 right-0 m-4" src="linkedin.svg" alt="Github" width="30" height="30" />
                                     <p className="text-sm mb-4 font-bold ">Septembre 2022 - Aujourd'hui</p>
@@ -753,7 +747,7 @@ export default function Home() {
                                 </div>
                                 </a>
                                 <a href="https://www.linkedin.com/company/innovative-propulsion-laboratory/" target="_blank" rel="noopener noreferrer">
-                                <div className="snap-center sm:snap-align-none focus:outline-none bg-zinc-800/60 rounded-lg p-8 relative hover:bg-zinc-800/80 hover:scale-95 transition-transform hover:border">
+                                <div className="snap-center focus:outline-none bg-zinc-800/60 rounded-lg p-8 relative hover:bg-zinc-800/80 hover:scale-95 transition-transform hover:border">
                                     <h3 className="text-2xl font-bold mb-2">{translations[language].ipl}</h3>
                                     <img className="absolute top-0 right-0 m-4" src="linkedin.svg" alt="Github" width="30" height="30" />
                                     <p className="text-sm mb-4 font-bold ">Septembre 2022 - Aujourd'hui</p>

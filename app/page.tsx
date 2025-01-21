@@ -64,7 +64,7 @@ const translations: Record<Language, Translations> = {
         welcome: "- Welcome",
         help: "- Type 'help' to see available commands.",
         scroll: "- ... or scroll to see more.",
-        commands: "- Commands: help, clear, about, whois, experience, formation, competence, projet, contact",
+        commands: "- Commands: help, clear, about, whois, experience, formation, competence, project, contact",
         unknownCommand: "- Unknown command, type 'help' to see available commands.",
         about: "- Welcome to Antoine CASTEL's website, here you will find the equivalent of an online CV regrouping Antoine's professional information (Experiences, Education, Skills, Projects, and Contact).",
         
@@ -185,7 +185,7 @@ const translations: Record<Language, Translations> = {
         welcome: "- Bienvenue",
         help: "- Entrez 'help' pour voir les commandes disponibles.",
         scroll: "- ... ou faites défiler pour en voir plus.",
-        commands: "- Commandes: help, clear, about, whois, experience, formation, competence, projet, contact",
+        commands: "- Commandes: help, clear, about, whois, experience, formation, competence, project, contact",
         unknownCommand: "- Commande inconnue, tapez 'help' pour voir les commandes disponibles.",
         about: "- Bienvenue sur le site d'Antoine CASTEL, vous trouverez ici l'équivalent d'un CV en ligne regroupant les informations professionnelles d'Antoine (Expériences, Formations, Compétences, Projets et Contact).",
         
@@ -351,8 +351,8 @@ export default function Home() {
             case "competence":
                 document.getElementById("competence")?.scrollIntoView({ behavior: 'smooth' });
                 break;
-            case "projet":
-                document.getElementById("projet")?.scrollIntoView({ behavior: 'smooth' });
+            case "project":
+                document.getElementById("project")?.scrollIntoView({ behavior: 'smooth' });
                 break;
             case "contact":
                 document.getElementById("contact")?.scrollIntoView({ behavior: 'smooth' });

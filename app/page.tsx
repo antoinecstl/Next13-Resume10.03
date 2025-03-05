@@ -305,7 +305,6 @@ const translations: Record<Language, Translations> = {
 };
 
 export default function Home() {
-    const router = useRouter();
     const [inputValue, setInputValue] = useState("");
     const [terminalOutput, setTerminalOutput] = useState<string[]>([
         translations.en.welcome as string,
@@ -389,7 +388,7 @@ export default function Home() {
             {/* Terminal Section */}
             <section className="min-h-screen flex flex-col justify-center container pb-32 md:pb-64" onClick={() => inputRef.current?.focus()} >
                 {backgroundImages}
-                <div className="snap-start w-full rounded-lg shadow-lg animate-slideIn flex flex-row">
+                <div className="snap-start w-full rounded-lg shadow-lg  flex flex-row">
                     <div className="flex-1 overflow-y-auto font-mono mb-2 pt-8 md:pt-16">
                         {terminalOutput.map((line, index) => (
                             <div key={index}>{line}</div>

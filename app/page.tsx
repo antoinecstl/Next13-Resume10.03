@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
+import Image from "next/image"; // Using Next.js Image for optimization
 
 const imageSources = [
     "key.svg",
@@ -38,17 +38,21 @@ const getRandomCoordinates = () => {
 const backgroundImages = Array(25).fill(null).map((_, index) => {
     const { top, left } = getRandomCoordinates();
     return (
-        <img
+        <Image
             key={index}
             src={imageSources[Math.floor(Math.random() * imageSources.length)]}
-            alt="Background Image"
+            alt={`Tech background icon ${index + 1}`}
             className="absolute opacity-10 transform-gpu"
+            width={50}
+            height={50}
             style={{
                 width: '5%',
                 top: `${top}%`,
                 left: `${left}%`,
                 transform: `rotate(${Math.random() * 360}deg)`
             }}
+            priority={index < 5} // Prioritize loading first few images
+            loading={index >= 5 ? "lazy" : "eager"}
         />
     );
 });
@@ -374,6 +378,19 @@ export default function Home() {
         ]);
     };
 
+    useEffect(() => {
+        // Add language detection logic
+        const userLanguage = navigator.language.toLowerCase().startsWith('fr') ? 'fr' : 'en';
+        if (language !== userLanguage) {
+            setLanguage(userLanguage as Language);
+            setTerminalOutput([
+                translations[userLanguage as Language].welcome as string,
+                translations[userLanguage as Language].help as string,
+                translations[userLanguage as Language].scroll as string,
+            ]);
+        }
+    }, []);
+
     function scrollCarousel(direction: number, carouselID: string) {
         const carousel = document.getElementById(carouselID);
         const scrollAmount = 328;  
@@ -427,17 +444,20 @@ export default function Home() {
             <section id="whois" className="flex flex-col min-h-screen container animate-fadeIn py-32 md:py-64">
                 {/* First Main Section (CV) */}
                 <main className="flex flex-col min-h-screen container animate-slideIn">
-                    <header className="snap-center flex flex-col items-center justify-center min-h-screen "> 
+                    <header className="snap-center flex flex-col items-center justify-center min-h-screen"> 
                         <div className="w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 mb-4 md:mb-8">
-                            <img
+                            <Image
                                 className="rounded-full border-2 border-zinc-900 opacity-90"
                                 src="/Photo_Pro.jpg"
-                                alt="Antoine CASTEL"
+                                alt="Antoine CASTEL professional portrait"
+                                width={256}
+                                height={256}
                                 style={{
                                     width: '100%',
                                     height: '100%',
                                     objectFit: 'cover'
                                 }}
+                                priority
                             />
                         </div>
                         <div className='mr-4'>

@@ -706,7 +706,7 @@ export default function Home() {
                 </main>
             </section>
 
-            <section id="projet" className=" flex flex-col min-h-screen container animate-fadeIn animate-slideIn py-32">
+            <section id="project" className=" flex flex-col min-h-screen container animate-fadeIn animate-slideIn py-32">
                 {/* Second Main Section (Portfolio) */}
                 <main className="flex flex-col min-h-screen container">
                     {/*Portfolio*/}

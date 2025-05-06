@@ -3,6 +3,12 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 
+// Helper function to clean AI responses
+const cleanAIResponse = (text: string): string => {
+  // Remove the pattern 【6:1†toto.json】 and similar patterns
+  return text.replace(/【\d+:\d+†[^】]+】/g, '');
+};
+
 type Message = {
   id: string;
   content: string;
@@ -186,7 +192,7 @@ export default function ChatBox() {
         setThreadId(responseData.thread_id);
       }
       
-      return responseData.reply;
+      return cleanAIResponse(responseData.reply);
     } catch (error) {
       console.error("Erreur lors de l'appel à l'API:", error);
       return language === 'fr' ? 
@@ -269,7 +275,14 @@ export default function ChatBox() {
 
   // Determines if we should show the custom animated placeholder
   const shouldShowAnimatedPlaceholder = () => {
+    // Show animated placeholder only when there are no messages
     return !messages.length && !currentMessage;
+  };
+
+  // Determines if we should show any placeholder (animated or static)
+  const shouldShowPlaceholder = () => {
+    // Always show some form of placeholder when input is empty
+    return !currentMessage;
   };
 
   return (
@@ -380,8 +393,10 @@ export default function ChatBox() {
                   onChange={handleInputChange}
                   disabled={isLoading}
                 />
-                {shouldShowAnimatedPlaceholder() && (
-                  <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-zinc-400 pointer-events-none ${getPlaceholderClass()}`}>
+                {shouldShowPlaceholder() && (
+                  <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-zinc-400 pointer-events-none ${
+                    shouldShowAnimatedPlaceholder() ? getPlaceholderClass() : ""
+                  }`}>
                     {getPlaceholder()}
                   </span>
                 )}

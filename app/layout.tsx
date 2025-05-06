@@ -3,6 +3,9 @@ import { Inter } from 'next/font/google';
 import { Analytics } from "@vercel/analytics/react"
 import { Metadata } from "next";
 import JsonLd from './components/JsonLd';
+import ChatBox from "./components/ChatBox";
+
+
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -100,6 +103,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <JsonLd data={personSchema} />
         {children}
+        <ChatBox />
         <Analytics />
       </body>
     </html>

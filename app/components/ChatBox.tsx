@@ -273,10 +273,10 @@ export default function ChatBox() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4 right-4 z-50 max-w-full">
       {isOpen ? (
         <div 
-          className={`w-96 h-[32rem] bg-slate-950 rounded-lg shadow-lg flex flex-col border border-zinc-700 ${chatBoxClass}`}
+          className={`w-[calc(100vw-2rem)] sm:w-96 h-[32rem] sm:h-[32rem] bg-slate-950 rounded-lg shadow-lg flex flex-col border border-zinc-700 ${chatBoxClass}`}
         >
           <div 
             className="flex justify-between items-center p-3"
@@ -356,10 +356,12 @@ export default function ChatBox() {
             ))}
             {isLoading && (
               <div className="mr-auto bg-zinc-800/80 text-white rounded-lg py-3 px-4 max-w-[80%] flex items-center shadow-md">
-                <div className="flex space-x-2">
-                  <div className="w-3 h-3 bg-zinc-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
-                  <div className="w-3 h-3 bg-zinc-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  <div className="w-3 h-3 bg-zinc-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                <div className="flex items-center">
+                  <div className="relative w-8 h-8">
+                    <div className="absolute top-0 left-0 right-0 bottom-0 border-2 border-t-transparent border-zinc-400 rounded-full animate-spin"></div>
+                    <div className="absolute top-1 left-1 right-1 bottom-1 border-2 border-l-transparent border-zinc-500 rounded-full animate-spin" style={{ animationDuration: '1s', animationDirection: 'reverse' }}></div>
+                  </div>
+                  <span className="ml-3 text-zinc-300 text-sm">{language === 'fr' ? 'Réflexion...' : 'Thinking...'}</span>
                 </div>
               </div>
             )}

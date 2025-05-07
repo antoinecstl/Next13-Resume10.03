@@ -258,6 +258,10 @@ export default function ChatBox() {
 
   // Get the appropriate placeholder based on language and current index
   const getPlaceholder = () => {
+    if (isLoading) {
+      return language === 'fr' ? 'Réflexion...' : 'Thinking...';
+    }
+    
     if (messages.length > 0) {
       return language === 'fr' ? "Tapez votre message..." : "Type your message...";
     } else {
@@ -286,18 +290,20 @@ export default function ChatBox() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 max-w-full">
+    <div className="fixed bottom-5 right-5 z-50 max-w-full">
       {isOpen ? (
         <div 
-          className={`w-[calc(100vw-2rem)] sm:w-96 h-[32rem] sm:h-[32rem] bg-slate-950 rounded-lg shadow-lg flex flex-col border border-zinc-700 ${chatBoxClass}`}
+          className={`w-[calc(100vw-2rem)] sm:w-96 h-[32rem] sm:h-[32rem] terminal-container backdrop-blur-md flex flex-col ${chatBoxClass}`}
         >
           <div 
             className="flex justify-between items-center p-3"
           >
-            <h2 className="text-lg font-semibold text-white flex items-center">
-              <Image src="/chatbox_white.svg" alt="Chat" width={24} height={24} className="mr-2" />
-              Helper
-            </h2>
+            <div className="flex items-center">
+              <h2 className="text-lg font-semibold text-white ml-2 flex items-center">
+                <Image src="/chatbox_white.svg" alt="Chat" width={20} height={20} className="mr-2" />
+                Helper
+              </h2>
+            </div>
             <div className="flex gap-2">
               <button 
                 onClick={clearChat} 
@@ -315,13 +321,17 @@ export default function ChatBox() {
               </button>
             </div>
           </div>
-          <div className="flex-1 p-4 overflow-y-auto bg-slate-950">
+          <div className="flex-1 p-4 overflow-y-auto bg-[rgba(16,16,24,0.9)]">
             {messages.length === 0 && (
-              <div className="h-full flex items-center justify-center">
-                <p className="text-zinc-500 text-center">
+              <div className="h-full flex flex-col items-center justify-center">
+          
+                <p className="text-indigo-200 text-center font-semibold">
                   {language === 'fr' ? 
                     "Comment puis-je vous aider ?" : 
                     "What can I help with?"}
+                </p>
+                <p className="text-indigo-300/50 text-xs mt-2 font-mono">
+                  Powered by Catalysia
                 </p>
               </div>
             )}
@@ -330,9 +340,9 @@ export default function ChatBox() {
                 key={message.id}
                 className={`mb-4 ${
                   message.sender === 'user' 
-                    ? 'ml-auto bg-zinc-700 text-white' 
-                    : 'mr-auto bg-zinc-800/80 text-white'
-                } rounded-lg py-2 px-4 max-w-[80%] shadow-md`}
+                    ? 'ml-auto bg-indigo-500/20 border border-indigo-500/30 text-white' 
+                    : 'mr-auto bg-[rgba(40,40,50,0.7)] border border-zinc-700/30 text-white'
+                } rounded-lg py-2 px-4 max-w-[80%] shadow-md animate-fadeIn backdrop-blur-sm`}
               >
                 {message.sender === 'user' ? (
                   <div>{message.content}</div>
@@ -344,21 +354,21 @@ export default function ChatBox() {
                         ul: ({ node, ...props }) => <ul className="list-disc pl-5 mb-2" {...props} />,
                         ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mb-2" {...props} />,
                         li: ({ node, ...props }) => <li className="mb-1" {...props} />,
-                        h1: ({ node, ...props }) => <h1 className="text-xl font-bold mb-2" {...props} />,
-                        h2: ({ node, ...props }) => <h2 className="text-lg font-bold mb-2" {...props} />,
-                        h3: ({ node, ...props }) => <h3 className="text-md font-bold mb-2" {...props} />,
-                        a: ({ node, ...props }) => <a className="text-blue-400 underline" target="_blank" rel="noopener noreferrer" {...props} />,
+                        h1: ({ node, ...props }) => <h1 className="text-xl font-bold mb-2 gradient-text" {...props} />,
+                        h2: ({ node, ...props }) => <h2 className="text-lg font-bold mb-2 gradient-text" {...props} />,
+                        h3: ({ node, ...props }) => <h3 className="text-md font-bold mb-2 gradient-text" {...props} />,
+                        a: ({ node, ...props }) => <a className="text-indigo-300 underline" target="_blank" rel="noopener noreferrer" {...props} />,
                         code: ({ node, className, ...props }) => {
                           const match = /language-(\w+)/.exec(className || "");
                           const isCodeBlock = className?.includes("language-");
                           return isCodeBlock 
-                            ? <code className="block bg-zinc-900 text-gray-100 p-2 rounded my-2 overflow-x-auto" {...props} />
-                            : <code className="bg-zinc-900 text-gray-100 px-1 rounded" {...props} />;
+                            ? <code className="block bg-[rgba(20,20,30,0.9)] text-gray-100 p-2 rounded my-2 overflow-x-auto font-mono text-sm" {...props} />
+                            : <code className="bg-[rgba(20,20,30,0.9)] text-indigo-200 px-1 rounded font-mono text-sm" {...props} />;
                         },
-                        pre: ({ node, ...props }) => <pre className="bg-zinc-900 text-gray-100 p-2 rounded my-2 overflow-x-auto" {...props} />,
-                        blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-zinc-600 pl-4 italic my-2" {...props} />,
-                        strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
-                        em: ({ node, ...props }) => <em className="italic" {...props} />
+                        pre: ({ node, ...props }) => <pre className="bg-[rgba(20,20,30,0.9)] text-gray-100 p-2 rounded my-2 overflow-x-auto font-mono text-sm" {...props} />,
+                        blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-indigo-500/40 pl-4 italic my-2" {...props} />,
+                        strong: ({ node, ...props }) => <strong className="font-bold text-indigo-200" {...props} />,
+                        em: ({ node, ...props }) => <em className="italic text-indigo-200" {...props} />
                       }}
                     >
                       {message.content}
@@ -367,52 +377,48 @@ export default function ChatBox() {
                 )}
               </div>
             ))}
-            {isLoading && (
-              <div className="mr-auto bg-zinc-800/80 text-white rounded-lg py-3 px-4 max-w-[80%] flex items-center shadow-md">
-                <div className="flex items-center">
-                  <div className="relative w-8 h-8">
-                    <div className="absolute top-0 left-0 right-0 bottom-0 border-2 border-t-transparent border-zinc-400 rounded-full animate-spin"></div>
-                    <div className="absolute top-1 left-1 right-1 bottom-1 border-2 border-l-transparent border-zinc-500 rounded-full animate-spin" style={{ animationDuration: '1s', animationDirection: 'reverse' }}></div>
-                  </div>
-                  <span className="ml-3 text-zinc-300 text-sm">{language === 'fr' ? 'Réflexion...' : 'Thinking...'}</span>
-                </div>
-              </div>
-            )}
             <div ref={messagesEndRef} />
           </div>
-          <div className="p-3 bg-slate-950">
+          <div className="p-3 bg-[rgba(16,16,24,0.95)] border-t border-indigo-500/10">
             <form onSubmit={sendMessage} className="flex items-center space-x-2">
               <div className="relative flex-1">
                 <input
                   type="text"
                   ref={inputRef}
                   placeholder=""
-                  className="w-full px-3 py-1.5 border border-zinc-700 rounded bg-zinc-800 text-white text-sm
-                            focus:outline-none focus:ring-2 focus:ring-zinc-600"
+                  className="w-full px-3 py-2 border border-indigo-500/30 rounded-lg bg-[rgba(30,30,40,0.7)] text-white text-sm
+                            focus:outline-none focus:ring-2 focus:ring-indigo-500/50 backdrop-blur-sm font-mono"
                   value={currentMessage}
                   onChange={handleInputChange}
                   disabled={isLoading}
                 />
                 {shouldShowPlaceholder() && (
-                  <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-zinc-400 pointer-events-none ${
-                    shouldShowAnimatedPlaceholder() ? getPlaceholderClass() : ""
+                  <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-indigo-300/60 pointer-events-none ${
+                    shouldShowAnimatedPlaceholder() && !isLoading ? getPlaceholderClass() : ""
                   }`}>
-                    {getPlaceholder()}
+                    {isLoading ? (
+                      <span className="flex items-center">
+                        <span className="relative w-4 h-4 mr-2">
+                          <span className="absolute top-0 left-0 right-0 bottom-0 border-2 border-t-transparent border-indigo-400 rounded-full animate-spin"></span>
+                          <span className="absolute top-0.5 left-0.5 right-0.5 bottom-0.5 border-2 border-l-transparent border-indigo-500 rounded-full animate-spin" style={{ animationDuration: '1s', animationDirection: 'reverse' }}></span>
+                        </span>
+                        {getPlaceholder()}
+                      </span>
+                    ) : (
+                      getPlaceholder()
+                    )}
                   </span>
                 )}
               </div>
               <button 
                 type="submit" 
-                className={`p-1.5 bg-zinc-700 hover:bg-zinc-600 text-white rounded-full transition-all duration-500 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:rotate-90'}`}
+                className={`p-2 bg-indigo-500/20 hover:bg-indigo-500/30 text-white rounded-full transition-all duration-300 border border-indigo-500/30
+                          ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-glow hover:scale-105'}`}
                 disabled={isLoading}
               >
-                {isLoading ? (
-                  <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform -rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                )}
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform -rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
               </button>
             </form>
           </div>
@@ -420,9 +426,9 @@ export default function ChatBox() {
       ) : (
         <button 
           onClick={toggleChatBox} 
-          className={`bg-zinc-800 hover:bg-zinc-700 text-white rounded-full p-4 shadow-lg flex items-center justify-center transition-all duration-300 ${isAnimating ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}`}
+          className={`btn group p-4 shadow-lg flex items-center justify-center ${isAnimating ? 'opacity-0 scale-90' : 'opacity-100 scale-100 animate-pulse-slow'}`}
         >
-          <Image src="/chatbox_white.svg" alt="Chat" width={24} height={24} />
+          <Image src="/chatbox_white.svg" alt="Chat" width={24} height={24} className="group-hover:scale-110 transition-transform" />
         </button>
       )}
     </div>

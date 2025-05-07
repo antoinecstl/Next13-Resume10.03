@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react";
-import Image from "next/image"; // Using Next.js Image for optimization
+import Image from "next/image";
+import React from "react";
 
 const imageSources = [
     "key.svg",
@@ -318,6 +319,67 @@ export default function Home() {
 
     const [language, setLanguage] = useState<Language>("en");
     const inputRef = useRef<HTMLInputElement>(null);
+    const [activeSectionIndex, setActiveSectionIndex] = useState(0);
+    const sectionRefs = useRef<Array<HTMLElement | null>>([]);
+
+    // Liste des sections pour la navigation
+    const sections = [
+        "home", 
+        "whois", 
+        "experience", 
+        "formation", 
+        "competence", 
+        "project", 
+        "associative", 
+        "contact"
+    ];
+
+    // Observer pour le scroll snapping et l'indicateur de navigation active
+    useEffect(() => {
+        const observers: IntersectionObserver[] = [];
+        const sectionElements = sections.map(id => document.getElementById(id));
+        sectionRefs.current = sectionElements;
+
+        sectionElements.forEach((section, index) => {
+            if (!section) return;
+
+            const observer = new IntersectionObserver(
+                ([entry]) => {
+                    if (entry.isIntersecting) {
+                        setActiveSectionIndex(index);
+                    }
+                },
+                { threshold: 0.5 } // Déclencher lorsque 50% de la section est visible
+            );
+
+            observer.observe(section);
+            observers.push(observer);
+        });
+
+        // Clean up
+        return () => {
+            observers.forEach((observer, index) => {
+                if (sectionElements[index]) {
+                    observer.unobserve(sectionElements[index]!);
+                }
+            });
+        };
+    }, []);
+
+    // Fonction pour défiler vers une section spécifique
+    const scrollToSection = (index: number) => {
+        const section = sectionRefs.current[index];
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    // Fonction pour défiler vers la section suivante
+    const scrollToNextSection = () => {
+        if (activeSectionIndex < sections.length - 1) {
+            scrollToSection(activeSectionIndex + 1);
+        }
+    };
 
     const handleCommand = () => {
         const command = inputValue.trim().toLowerCase();
@@ -343,22 +405,22 @@ export default function Home() {
                 output.push(translations[language].about as string);
                 break;
             case "whois":
-                document.getElementById("whois")?.scrollIntoView({ behavior: 'smooth' });
+                scrollToSection(1); // Index de la section 'whois'
                 break;
             case "experience":
-                document.getElementById("experience")?.scrollIntoView({ behavior: 'smooth' });
+                scrollToSection(2); // Index de la section 'experience'
                 break;
             case "formation":
-                document.getElementById("formation")?.scrollIntoView({ behavior: 'smooth' });
+                scrollToSection(3); // Index de la section 'formation'
                 break;
             case "competence":
-                document.getElementById("competence")?.scrollIntoView({ behavior: 'smooth' });
+                scrollToSection(4); // Index de la section 'competence'
                 break;
             case "project":
-                document.getElementById("project")?.scrollIntoView({ behavior: 'smooth' });
+                scrollToSection(5); // Index de la section 'project'
                 break;
             case "contact":
-                document.getElementById("contact")?.scrollIntoView({ behavior: 'smooth' });
+                scrollToSection(7); // Index de la section 'contact'
                 break;
             default:
                 output.push(translations[language].unknownCommand as string);
@@ -401,53 +463,88 @@ export default function Home() {
     
 
     return (
-        <main className="snap-y snap-mandatory h-screen overflow-y-scroll bg-gradient-to-t from-slate-950 to-gray-950 animate-fadeIn text-white space-y-32 md:space-y-64 px-8 md:px-16" >
+        <main className="h-screen overflow-y-scroll">
+            {/* Navigation par points - maintenant visible sur mobile aussi */}
+            <nav className="nav-dots">
+                {sections.map((section, index) => (
+                    <button 
+                        key={section} 
+                        className={`nav-dot ${activeSectionIndex === index ? 'active' : ''}`}
+                        onClick={() => scrollToSection(index)}
+                        aria-label={`Navigate to ${section} section`}
+                    />
+                ))}
+            </nav>
+
             {/* Terminal Section */}
-            <section className="min-h-screen flex flex-col justify-center container pb-32 md:pb-64" onClick={() => inputRef.current?.focus()} >
-                {backgroundImages}
-                <div className="snap-start w-full rounded-lg shadow-lg  flex flex-row">
-                    <div className="flex-1 overflow-y-auto font-mono mb-2 pt-8 md:pt-16">
+            <section id="home" className="h-screen snap-section flex flex-col justify-center px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 relative" onClick={() => inputRef.current?.focus()}>
+                {backgroundImages.map(img => React.cloneElement(img, {
+                    className: `${img.props.className} tech-icon`
+                }))}
+                
+                <div className="snap-start w-full terminal-container">
+                    <div className="terminal-header">
+                        <div className="terminal-dot bg-red-500"></div>
+                        <div className="terminal-dot bg-yellow-500"></div>
+                        <div className="terminal-dot bg-green-500"></div>
+                        <span className="text-xs text-gray-400 ml-2">antoine@castel:~</span>
+                    </div>
+                    <div className="flex-1 overflow-y-auto font-mono p-6 relative">
                         {terminalOutput.map((line, index) => (
-                            <div key={index}>{line}</div>
+                            <div key={index} className="mb-1 text-gray-200">{line}</div>
                         ))}
-                        <div className="flex">
-                            <span className="mr-2">{'>'}</span>
+                        <div className="flex items-center mt-1">
+                            <span className="mr-2 text-gray-200">{'>'}</span>
                             <input
-                                className="flex-1 bg-transparent focus:outline-none"
+                                className="flex-1 bg-transparent focus:outline-none text-white"
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
                                 onKeyDown={(e) => e.key === "Enter" && handleCommand()}
                                 placeholder={language === "fr" ? "Entrez une commande..." : "Type a command..."}
                                 ref={inputRef}
+                                aria-label="Terminal command input"
                             />
                         </div>
                     </div>
+                </div>
+                
+                <div className="fixed top-4 right-4 z-10">
                     <button
                         onClick={toggleLanguage}
-                        className="bg-gray-900 hover:bg-gray-800 p-2 rounded-lg h-min flex items-center space-x-2 mt-4 md:mt-8"
+                        className="btn group flex items-center justify-center"
+                        aria-label={language === "fr" ? "Switch to English" : "Passer au français"}
                     >
                         {language === "fr" ? (
                             <>
-                                <span role="img" aria-label="English Flag">🇬🇧</span>
+                                <span role="img" aria-label="English Flag" className="sm:mr-2 transform transition-transform group-hover:scale-110">🇬🇧</span>
                                 <span className="hidden sm:inline">English</span>
                             </>
                         ) : (
                             <>
-                                <span role="img" aria-label="French Flag">🇫🇷</span>
+                                <span role="img" aria-label="French Flag" className="sm:mr-2 transform transition-transform group-hover:scale-110">🇫🇷</span>
                                 <span className="hidden sm:inline">Français</span>
                             </>
                         )}
                     </button>
                 </div>
+
+                {/* Scroll down indicator - uniquement sur la première section */}
+                <div className="scroll-down-indicator" onClick={scrollToNextSection}>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                </div>
             </section>
 
-            <section id="whois" className="flex flex-col min-h-screen container animate-fadeIn py-32 md:py-64">
-                {/* First Main Section (CV) */}
-                <main className="flex flex-col min-h-screen container animate-slideIn">
-                    <header className="snap-center flex flex-col items-center justify-center min-h-screen"> 
-                        <div className="w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 mb-4 md:mb-8">
+            {/* Profile Section */}
+            <section id="whois" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 animate-fadeIn flex flex-col justify-center">
+                {/* Profile Header */}
+                <header className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 py-16 md:py-24">
+                    <div className="relative">
+                        <div className="absolute inset-0 bg-indigo-500/20 rounded-full blur-xl"></div>
+                        <div className="w-36 h-36 md:w-48 md:h-48 lg:w-56 lg:h-56 relative">
                             <Image
-                                className="rounded-full border-2 border-zinc-900 opacity-90"
+                                className="rounded-full border-2 border-indigo-500/30 object-cover"
                                 src="/Photo_Pro.jpg"
                                 alt="Antoine CASTEL professional portrait"
                                 width={256}
@@ -455,355 +552,366 @@ export default function Home() {
                                 style={{
                                     width: '100%',
                                     height: '100%',
-                                    objectFit: 'cover'
                                 }}
                                 priority
                             />
                         </div>
-                        <div className='mr-4'>
-                            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">Antoine CASTEL</h1>
-                            <p className="text-sm md:text-base lg:text-xl">{translations[language].student}</p>
+                    </div>
+                    <div className="text-center md:text-left">
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold gradient-text">Antoine CASTEL</h1>
+                        <p className="text-lg md:text-xl mt-2 text-gray-300">{translations[language].student}</p>
+                    </div>
+                </header>
+            </section>
+                
+            {/* Experience Section */}
+            <section id="experience" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 flex flex-col justify-center">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 section-heading">{translations[language].experience}</h2>
+                <div className="space-y-8">
+                    <div className="card p-6 md:p-8">
+                        <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].eyTitle}</h3>
+                        <p className="text-xs md:text-sm mb-4 font-bold text-gray-400">{translations[language].eyDuration}</p>
+                        <p className="text-sm md:text-base mb-6 text-gray-300">{translations[language].eyDescription}</p>
+                        <div className="card-inner space-y-2">
+                            {(translations[language].eyDetails as string[]).map((detail, index) => (
+                                <p key={index} className="text-sm md:text-base text-gray-200">{detail}</p>
+                            ))}
                         </div>
-                    </header>
+                    </div>
                     
-                    {/* Section Expérience */}
-                    <section id="experience" className="flex flex-col justify-center min-h-screen mb-8 md:mb-12 py-32 md:py-72">
-                            <h2 className="snap-start pt-8 text-xl md:text-2xl lg:text-3xl font-semibold mb-5">{translations[language].experience}</h2>
-                            <div className="snap-center xl:snap-align-none mb-8 w-full">
-                                <div className="bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 h-full">
-                                    <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].eyTitle}</h3>
-                                    <p className="text-xs md:text-sm mb-4 font-bold ">{translations[language].eyDuration}</p>
-                                    <p className='text-sm md:text-base mb-4'>{translations[language].eyDescription}</p>
-                                    <div className='text-sm md:text-base flex-1 mb-2 bg-zinc-800/80 rounded-lg p-3 md:p-5'>
-                                        {(translations[language].eyDetails as string[]).map((detail, index) => (
-                                            <p key={index}>{detail}</p>
-                                        ))}
-                                    </div>   
-                                </div>
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                        <div className="card p-6 md:p-8 h-full">
+                            <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].docaposteTitle}</h3>
+                            <p className="text-xs md:text-sm mb-4 font-bold text-gray-400">{translations[language].docaposteDuration}</p>
+                            <p className="text-sm md:text-base mb-6 text-gray-300">{translations[language].docaposteDescription}</p>
+                            <div className="card-inner space-y-2">
+                                {(translations[language].docaposteDetails as string[]).map((detail, index) => (
+                                    <p key={index} className="text-sm md:text-base text-gray-200">{detail}</p>
+                                ))}
                             </div>
-                            <div className="xl:snap-center flex flex-col xl:flex-row items-stretch space-y-8 xl:space-y-0 xl:space-x-8">
-                                <div className="snap-center xl:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                    <div className="flex flex-col justify-center items-center w-full">
-                                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].docaposteTitle}</h3>
-                                        <p className="text-xs md:text-sm mb-4 font-bold ">{translations[language].docaposteDuration}</p>
-                                        <p className='text-sm md:text-base mb-4'>{translations[language].docaposteDescription}</p>
-                                        <div className='text-sm md:text-base flex-1 mb-2 bg-zinc-800/80 rounded-lg p-3 md:p-5'>
-                                            {(translations[language].docaposteDetails as string[]).map((detail, index) => (
-                                                <p key={index}>{detail}</p>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="snap-center xl:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                    <div className="flex flex-col justify-center items-center w-full">
-                                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].mpeTitle}</h3>
-                                        <p className="text-xs md:text-sm mb-4 font-bold ">{translations[language].mpeDuration}</p>
-                                        <p className='text-sm md:text-base mb-4'>{translations[language].mpeDescription}</p>
-                                        <div className=' text-sm md:text-base flex-1 mb-2 bg-zinc-800/80 rounded-lg p-3 md:p-5'>
-                                            {(translations[language].mpeDetails as string[]).map((detail, index) => (
-                                                <p key={index}>{detail}</p>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
+                        </div>
+                        
+                        <div className="card p-6 md:p-8 h-full">
+                            <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].mpeTitle}</h3>
+                            <p className="text-xs md:text-sm mb-4 font-bold text-gray-400">{translations[language].mpeDuration}</p>
+                            <p className="text-sm md:text-base mb-6 text-gray-300">{translations[language].mpeDescription}</p>
+                            <div className="card-inner space-y-2">
+                                {(translations[language].mpeDetails as string[]).map((detail, index) => (
+                                    <p key={index} className="text-sm md:text-base text-gray-200">{detail}</p>
+                                ))}
                             </div>
-                    </section>
+                        </div>
+                    </div>
+                </div>
+            </section>
+                
+            {/* Education Section */}
+            <section id="formation" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 flex flex-col justify-center">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 section-heading">{translations[language].education}</h2>
+                <div className="space-y-8">
+                    <div className="card p-6 md:p-8">
+                        <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].csTitle}</h3>
+                        <p className="text-xs md:text-sm mb-4 font-bold text-gray-400">{translations[language].csDuration}</p>
+                        <p className="text-sm md:text-base mb-6 text-gray-300 font-medium">{translations[language].csDescription}</p>
+                        <div className="card-inner">
+                            <p className="font-bold mb-2 text-gray-200">{translations[language].csSubjects}</p>
+                            <p className="text-sm md:text-base text-gray-300">{translations[language].csSubjectsList}</p>
+                        </div>
+                    </div>
                     
-                    {/* Section Éducation */}
-                    <section id="formation" className="flex flex-col justify-center min-h-screen mb-8 md:mb-12 py-32 md:py-72">
-                            <h2 className="snap-start pt-8 text-xl md:text-2xl lg:text-3xl font-semibold mb-4">{translations[language].education}</h2>
-                            <div className="snap-center xl:snap-align-none mb-8 w-full">
-                                <div className="bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 h-full">
-                                    <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].csTitle}</h3>
-                                    <p className="text-xs md:text-sm mb-4 font-bold ">{translations[language].csDuration}</p>
-                                    <p className='mb-4 mt-4 text-sm md:text-base font-semibold'>{translations[language].csDescription}</p>
-                                    <div className='text-sm md:text-base flex-1 mb-2 bg-zinc-800/80 rounded-lg p-3 md:p-5 hover:bg-zinc-950/20'>
-                                        <a className='font-bold mb-2'>{translations[language].csSubjects}</a> 
-                                        <p>{translations[language].csSubjectsList}</p>
-                                    </div>   
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                        <div className="card p-6 md:p-8 h-full">
+                            <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].csulbTitle}</h3>
+                            <p className="text-xs md:text-sm mb-4 font-bold text-gray-400">{translations[language].csulbDuration}</p>
+                            <p className="text-sm md:text-base mb-6 text-gray-300 font-medium">{translations[language].csulbDescription}</p>
+                            <div className="space-y-4">
+                                <div className="card-inner">
+                                    <p className="font-bold mb-2 text-gray-200">{translations[language].csulbSubjects}</p>
+                                    <p className="text-sm md:text-base text-gray-300">{translations[language].csulbSubjectsList}</p>
+                                </div>
+                                <div className="card-inner">
+                                    <p className="font-bold mb-2 text-gray-200">{translations[language].csulbProjects}</p>
+                                    <p className="text-sm md:text-base text-gray-300">{translations[language].csulbProjectsList}</p>
                                 </div>
                             </div>
-                            <div className='xl:snap-center flex flex-col xl:flex-row items-stretch space-y-8 xl:space-y-0 xl:space-x-8'>
-                                <div className="flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
-                                    <div className="snap-center xl:snap-align-none flex flex-col justify-center w-full">
-                                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].csulbTitle}</h3>
-                                        <p className="text-xs md:text-sm mb-2 font-bold">{translations[language].csulbDuration}</p>
-                                        <p className='mb-4 md:mb-8 mt-3 md:mt-7 text-sm md:text-base font-semibold'>{translations[language].csulbDescription}</p>
-                                        <div className='text-sm md:text-base flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                            <a className='font-bold mb-2'>{translations[language].csulbSubjects}</a> 
-                                            <p>{translations[language].csulbSubjectsList}</p>
-                                        </div>
-                                        <div className='text-sm md:text-base flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                            <a className='font-bold mb-2'>{translations[language].csulbProjects}</a> 
-                                            <p>{translations[language].csulbProjectsList}</p>
-                                        </div>
-                                    </div>
+                        </div>
+                        
+                        <div className="card p-6 md:p-8 h-full">
+                            <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].ipsaTitle}</h3>
+                            <p className="text-xs md:text-sm mb-4 font-bold text-gray-400">{translations[language].ipsaDuration}</p>
+                            <p className="text-sm md:text-base mb-6 text-gray-300 font-medium">{translations[language].ipsaDescription}</p>
+                            <div className="space-y-4">
+                                <div className="card-inner">
+                                    <p className="font-bold mb-2 text-gray-200">{translations[language].ipsaSubjects}</p>
+                                    <p className="text-sm md:text-base text-gray-300">{translations[language].ipsaSubjectsList}</p>
                                 </div>
-                                <div className="flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
-                                    <div className="snap-center xl:snap-align-none flex flex-col justify-center w-full">
-                                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].ipsaTitle}</h3>
-                                        <p className="text-xs md:text-sm mb-2 font-bold">{translations[language].ipsaDuration}</p>
-                                        <p className='mb-4 mt-4 text-sm md:text-base font-semibold'>{translations[language].ipsaDescription}</p>
-                                        <div className='text-sm md:text-base flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                            <a className='font-bold mb-2'>{translations[language].ipsaSubjects}</a> 
-                                            <p>{translations[language].ipsaSubjectsList}</p>
-                                        </div>
-                                        <div className='text-sm md:text-base flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                            <a className='font-bold mb-2'>{translations[language].ipsaProjects}</a> 
-                                            <p>{translations[language].ipsaProjectsList}</p>
-                                        </div>
-                                    </div>
+                                <div className="card-inner">
+                                    <p className="font-bold mb-2 text-gray-200">{translations[language].ipsaProjects}</p>
+                                    <p className="text-sm md:text-base text-gray-300">{translations[language].ipsaProjectsList}</p>
                                 </div>
                             </div>
-                    </section>
+                        </div>
+                    </div>
+                </div>
+            </section>
+                
+            {/* Skills Section */}
+            <section id="competence" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 flex flex-col justify-center">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 section-heading">{translations[language].skills}</h2>
+                <div className="relative">
+                    <button className="-mx-8 absolute left-0 top-11 md:top-16 transform -translate-y-1/2" onClick={() => scrollCarousel(-1, 'programming-carousel')}>
+                        <svg width="30" height="30" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="25,0 0,25 25,50 25,46 4,25 25,4" fill="white"/>
+                        </svg>
+                    </button>
+                        <div className="flex overflow-x-auto hide-scroll-bar" id="programming-carousel">
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2">Python</h3>
+                                <p className="text-sm mb-2 font-bold ">{translations[language].advanced}</p>
+                            </div>
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2 ">C/C++</h3>
+                                <p className="text-sm mb-2 font-bold">{translations[language].advanced}</p>
+                            </div>
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2 ">Matlab</h3>
+                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
+                            </div>
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2 ">FPGA - VHDL</h3>
+                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
+                            </div>
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2 ">React - Javascript</h3>
+                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
+                            </div>
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2 ">HTML</h3>
+                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
+                            </div>
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2 ">R</h3>
+                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
+                            </div>
+                        </div>
+                    <button className="-mr-8 absolute right-0 top-11 md:top-16 transform -translate-y-1/2" onClick={() => scrollCarousel(1, 'programming-carousel')}>
+                        <svg width="30" height="30" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="25,0 50,25 25,50 25,46 46,25 25,4" fill="white"/>
+                        </svg>
+                    </button>
+                </div>
+                <div className="relative">
+                    <button className="-mx-8 absolute left-0 top-11 md:top-16 transform -translate-y-1/2" onClick={() => scrollCarousel(-1, 'skills-carousel')}>
+                        <svg width="30" height="30" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="25,0 0,25 25,50 25,46 4,25 25,4" fill="white"/>
+                        </svg>
+                    </button>
+                        <div className="flex overflow-x-auto hide-scroll-bar" id="skills-carousel">
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2 ">{translations[language].virtualization}</h3>
+                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
+                            </div>
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2 ">Linux (Kali,Ubuntu)</h3>
+                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
+                            </div>
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2 ">Windows 10/11</h3>
+                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
+                            </div>
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2 ">Google Cloud Platform</h3>
+                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
+                            </div>
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2 ">Powershell</h3>
+                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
+                            </div>
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2 ">GNS3</h3>
+                                <p className="text-sm mb-2 font-bold">{translations[language].beginner}</p>
+                            </div>
+                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/80 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/90">
+                                <h3 className="text-base md:text-xl font-bold mb-2">{translations[language].office}</h3>
+                                <p className="text-sm mb-2 font-bold ">{translations[language].advanced}</p>
+                            </div>
+                        </div>
+                    <button className="-mr-8 absolute right-0 top-11 md:top-16 transform -translate-y-1/2" onClick={() => scrollCarousel(1, 'skills-carousel')}>
+                        <svg width="30" height="30" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="25,0 50,25 25,50 25,46 46,25 25,4" fill="white"/>
+                        </svg>
+                    </button>
+                </div>
+
+                {/* Languages, Interests, and Personal Info Section */}
+                <div className="py-16 md:py-24">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div className="card p-6 md:p-8">
+                            <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].languages}</h3>
+                            <div className="space-y-4">
+                                <div className="card-inner">
+                                    <p className="font-bold mb-2 text-gray-200">{translations[language].french}</p>
+                                    <p className="text-sm md:text-base text-gray-300">{translations[language].frlevel}</p>
+                                </div>
+                                <div className="card-inner">
+                                    <p className="font-bold mb-2 text-gray-200">{translations[language].english}</p>
+                                    <p className="text-sm md:text-base text-gray-300">{translations[language].enlevel}</p>
+                                </div>
+                                <div className="card-inner">
+                                    <p className="font-bold mb-2 text-gray-200">{translations[language].spanish}</p>
+                                    <p className="text-sm md:text-base text-gray-300">{translations[language].splevel}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="card p-6 md:p-8">
+                            <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].interests}</h3>
+                            <div className="space-y-4">
+                                <div className="card-inner">
+                                    <p className="text-sm md:text-base text-gray-300">{translations[language].ctf}</p>
+                                </div>
+                                <div className="card-inner">
+                                    <p className="text-sm md:text-base text-gray-300">{translations[language].drone}</p>
+                                </div>
+                                <div className="card-inner">
+                                    <p className="text-sm md:text-base text-gray-300">{translations[language].rowing}</p>
+                                </div>
+                                <div className="card-inner">
+                                    <p className="text-sm md:text-base text-gray-300">{translations[language].sailing}</p>
+                                </div>
+                                <div className="card-inner">
+                                    <p className="text-sm md:text-base text-gray-300">{translations[language].carRenovation}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="card p-6 md:p-8">
+                            <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].personalInfo}</h3>
+                            <div className="space-y-4">
+                                <div className="card-inner">
+                                    <p className="font-bold mb-2 text-gray-200">{translations[language].address}:</p>
+                                    <p className="text-sm md:text-base text-gray-300">Paris 14ème</p>
+                                </div>
+                                <div className="card-inner">
+                                    <p className="font-bold mb-2 text-gray-200">{translations[language].transportation}:</p>
+                                    <p className="text-sm md:text-base text-gray-300">- {translations[language].license}</p>
+                                    <p className="text-sm md:text-base text-gray-300">- {translations[language].car}</p>
+                                    <p className="text-sm md:text-base text-gray-300">- {translations[language].boatLicense}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            {/* Projects Section */}
+            <section id="project" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 animate-fadeIn flex flex-col justify-center">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 section-heading">{translations[language].personalProjects}</h2>
+                <div className="space-y-8">
+                    <a href="https://github.com/antoinecstl/Sharips-Deploy-Next13" target="_blank" rel="noopener noreferrer" className="block">
+                        <div className="card p-6 md:p-8 relative hover:scale-95 transition-transform">
+                            <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].sharips}</h3>
+                            <img className="absolute top-0 right-0 m-4" src="git.svg" alt="Github" width="25" height="25" />
+                            <p className="text-sm md:text-base text-gray-300">{translations[language].sharipsDescription}</p>
+                        </div>
+                    </a>
                     
-                    {/* Section Compétence + Langues-Centres-InfoPerso */}
-                    <section id="competence" className="flex flex-col justify-center min-h-screen mb-8 md:mb-12 py-32 md:py-72">
-                            <div className="snap-start pt-8">
-                                <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold mb-2 md:mb-4 pb-4">{translations[language].skills}</h2>
-                                <div className="relative">
-                                    <button className="-mx-8 absolute left-0 top-11 md:top-16 transform -translate-y-1/2" onClick={() => scrollCarousel(-1, 'programming-carousel')}>
-                                        <svg width="30" height="30" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                                        <polygon points="25,0 0,25 25,50 25,46 4,25 25,4" fill="white"/>
-                                        </svg>
-                                    </button>
-                                        <div className="flex overflow-x-auto hide-scroll-bar" id="programming-carousel">
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2">Python</h3>
-                                                <p className="text-sm mb-2 font-bold ">{translations[language].advanced}</p>
-                                            </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2 ">C/C++</h3>
-                                                <p className="text-sm mb-2 font-bold">{translations[language].advanced}</p>
-                                            </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2 ">Matlab</h3>
-                                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
-                                            </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2 ">FPGA - VHDL</h3>
-                                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
-                                            </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2 ">React - Javascript</h3>
-                                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
-                                            </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2 ">HTML</h3>
-                                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
-                                            </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2 ">R</h3>
-                                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
-                                            </div>
-                                        </div>
-                                    <button className="-mr-8 absolute right-0 top-11 md:top-16 transform -translate-y-1/2" onClick={() => scrollCarousel(1, 'programming-carousel')}>
-                                        <svg width="30" height="30" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                                        <polygon points="25,0 50,25 25,50 25,46 46,25 25,4" fill="white"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div className="relative">
-                                    <button className="-mx-8 absolute left-0 top-11 md:top-16 transform -translate-y-1/2" onClick={() => scrollCarousel(-1, 'skills-carousel')}>
-                                        <svg width="30" height="30" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                                        <polygon points="25,0 0,25 25,50 25,46 4,25 25,4" fill="white"/>
-                                        </svg>
-                                    </button>
-                                        <div className="flex overflow-x-auto hide-scroll-bar" id="skills-carousel">
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2 ">{translations[language].virtualization}</h3>
-                                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
-                                            </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2 ">Linux (Kali,Ubuntu)</h3>
-                                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
-                                            </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2 ">Windows 10/11</h3>
-                                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
-                                            </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2 ">Google Cloud Platform</h3>
-                                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
-                                            </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2 ">Powershell</h3>
-                                                <p className="text-sm mb-2 font-bold">{translations[language].intermediate}</p>
-                                            </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2 ">GNS3</h3>
-                                                <p className="text-sm mb-2 font-bold">{translations[language].beginner}</p>
-                                            </div>
-                                            <div className="min-w-[170px] md:min-w-[300px] max-h-[90px] md:max-h-[150px] flex-1 mr-4 md:mr-8 mb-8 bg-zinc-800/60 rounded-lg p-4 md:p-8 flex flex-col justify-center items-center hover:bg-zinc-800/80">
-                                                <h3 className="text-base md:text-xl font-bold mb-2">{translations[language].office}</h3>
-                                                <p className="text-sm mb-2 font-bold ">{translations[language].advanced}</p>
-                                            </div>
-                                        </div>
-                                    <button className="-mr-8 absolute right-0 top-11 md:top-16 transform -translate-y-1/2" onClick={() => scrollCarousel(1, 'skills-carousel')}>
-                                        <svg width="30" height="30" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                                        <polygon points="25,0 50,25 25,50 25,46 46,25 25,4" fill="white"/>
-                                        </svg>
-                                    </button>
-                                </div>
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                        <a href="https://github.com/antoinecstl/Gestiopass" target="_blank" rel="noopener noreferrer" className="block h-full">
+                            <div className="card p-6 md:p-8 relative hover:scale-95 transition-transform h-full">
+                                <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].gestiopass}</h3>
+                                <img className="absolute top-0 right-0 m-4" src="git.svg" alt="Github" width="25" height="25" />
+                                <p className="text-sm md:text-base text-gray-300">{translations[language].gestiopassDescription}</p>
                             </div>
-                            <div className="mt-8 mb-12">
-                                <div className="lg:snap-center flex flex-col lg:flex-row items-stretch space-y-8 lg:space-y-0 lg:space-x-8">
-                                    <div className="snap-center lg:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
-                                        <div className='flex flex-col justify-center w-full'>
-                                            <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].languages}</h3>
-                                            <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                                <a className='font-bold mb-2'>{translations[language].french}</a>
-                                                <p>{translations[language].frlevel}</p>
-                                            </div>
-                                            <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                                <a className='font-bold mb-2'>{translations[language].english}</a>
-                                                <p>{translations[language].enlevel}</p>
-                                            </div>
-                                            <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                                <a className='font-bold mb-2'>{translations[language].spanish}</a>
-                                                <p>{translations[language].splevel}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="snap-center lg:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
-                                        <div className='flex flex-col justify-center w-full'>
-                                            <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].interests}</h3>
-                                            <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                                <p>{translations[language].ctf}</p>
-                                            </div>
-                                            <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                                <p>{translations[language].drone}</p>
-                                            </div>
-                                            <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                                <p>{translations[language].rowing}</p>
-                                            </div>
-                                            <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                                <p>{translations[language].sailing}</p>
-                                            </div>
-                                            <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                                <p>{translations[language].carRenovation}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="snap-center lg:snap-align-none flex-1 bg-zinc-800/60 rounded-lg p-4 md:p-8 hover:bg-zinc-800/80 flex justify-center">
-                                        <div className='flex flex-col justify-center w-full'>
-                                            <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-2">{translations[language].personalInfo}</h3>
-                                            <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                                <a className='font-bold mb-2'>{translations[language].address} :</a>
-                                                <p>Paris 14ème</p>
-                                            </div>
-                                            <div className='flex flex-col justify-center items-start bg-zinc-800/80 hover:bg-zinc-950/20 rounded-lg p-3 mb-2'>
-                                                <a className='font-bold mb-2'>{translations[language].transportation} :</a>
-                                                <p>- {translations[language].license}</p>
-                                                <p>- {translations[language].car}</p>
-                                                <p>- {translations[language].boatLicense}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        </a>
+                        
+                        <a href="https://github.com/antoinecstl/AutoSplit" target="_blank" rel="noopener noreferrer" className="block h-full">
+                            <div className="card p-6 md:p-8 relative hover:scale-95 transition-transform h-full">
+                                <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].autosplit}</h3>
+                                <img className="absolute top-0 right-0 m-4" src="git.svg" alt="Github" width="25" height="25" />
+                                <p className="text-sm md:text-base text-gray-300">{translations[language].autosplitDescription}</p>
                             </div>
-                    </section>
-                </main>
+                        </a>
+                    </div>
+                    
+                    <a href="https://github.com/antoinecstl" target="_blank" rel="noopener noreferrer" className="block text-center mt-10">
+                        <div className="flex items-center justify-center hover:scale-105 transition-transform">
+                            <h2 className="text-xl md:text-2xl font-semibold mr-4 gradient-text">{translations[language].accessGithub}</h2>
+                            <img src="git.svg" alt="Github" width="36" height="36" />
+                        </div>
+                    </a>
+                </div>
             </section>
 
-            <section id="project" className=" flex flex-col min-h-screen container animate-fadeIn animate-slideIn py-32">
-                {/* Second Main Section (Portfolio) */}
-                <main className="flex flex-col min-h-screen container">
-                    {/*Portfolio*/}
-                    <main className="flex flex-col min-h-screen container">  
-                    {/* Section Projets Personnels */}
-                        <section className="mb-16 pt-8">
-                                <h2 className="snap-start xl:snap-align-none pt-8 text-3xl font-semibold mb-4">{translations[language].personalProjects}</h2>
-                                <div className="mb-8 ">
-                                    <a href="https://github.com/antoinecstl/Sharips-Deploy-Next13" target="_blank" rel="noopener noreferrer" className="w-full lg:w-1/2">
-                                        <div className="bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 relative hover:scale-95 transition-transform hover:border h-full">
-                                            <h3 className="text-2xl font-bold mb-2">{translations[language].sharips}</h3>
-                                            <img className="absolute top-0 right-0 m-4" src="git.svg" alt="Github" width="25" height="25" />
-                                            <p>{translations[language].sharipsDescription}</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div className='lg:snap-center mb-2 flex flex-col space-y-8 lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 items-stretch'>
-                                    <a href="https://github.com/antoinecstl/Gestiopass" target="_blank" rel="noopener noreferrer" className="w-full lg:w-1/2">
-                                        <div className="snap-center lg:snap-align-none bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 relative hover:scale-95 transition-transform hover:border h-full">
-                                            <h3 className="text-2xl font-bold mb-2">{translations[language].gestiopass}</h3>
-                                            <img className="absolute top-0 right-0 m-4" src="git.svg" alt="Github" width="25" height="25" />
-                                            <p>{translations[language].gestiopassDescription}</p>
-                                        </div>
-                                    </a>
-                                    <a href="https://github.com/antoinecstl/AutoSplit" target="_blank" rel="noopener noreferrer" className="w-full lg:w-1/2">
-                                        <div className="snap-center lg:snap-align-none bg-zinc-800/60 rounded-lg p-8 hover:bg-zinc-800/80 relative hover:scale-95 transition-transform hover:border h-full">
-                                            <h3 className="text-2xl font-bold mb-2">{translations[language].autosplit}</h3>
-                                            <img className="absolute top-0 right-0 m-4" src="git.svg" alt="Github" width="25" height="25" />
-                                            <p>{translations[language].autosplitDescription}</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <a href="https://github.com/antoinecstl" target="_blank" rel="noopener noreferrer">
-                                        <div className='flex justify-evenly items-center mt-10'>
-                                            <div className="flex items-center hover:scale-105 transition-transform">
-                                                <h2 className="text-xl md:text-2xl font-semibold mr-4">{translations[language].accessGithub}</h2>
-                                                <img src="git.svg" alt="Email" width="36" height="36"/>
-                                            </div>
-                                        </div>
-                                </a>
-                        </section>
-
-                        {/* Section Projets Associatifs */}
-                        <section className="mb-12">
-                            <h2 className="text-3xl font-semibold mb-4">{translations[language].associativeProjects}</h2>
-                            <div className='flex flex-col space-y-8'>
-                                <a href="https://www.linkedin.com/company/ipsa-racing-team/" target="_blank" rel="noopener noreferrer">
-                                <div className="snap-center focus:outline-none bg-zinc-800/60 rounded-lg p-8 relative hover:bg-zinc-800/80 hover:scale-95 transition-transform hover:border">
-                                    <h3 className="text-2xl font-bold mb-2">{translations[language].ipsaRacingTeam}</h3>
-                                    <img className="absolute top-0 right-0 m-4" src="linkedin.svg" alt="Github" width="30" height="30" />
-                                    <p className="text-sm mb-4 font-bold ">Septembre 2022 - Aujourd'hui</p>
-                                    <p className="mb-2">{translations[language].ipsaRacingTeamDescription}</p>
-                                    <p className="font-semibold">{translations[language].systemLead}</p>
-                                    {(translations[language].systemLeadDetails as string[]).map((detail, index) => (
-                                        <p key={index}>{detail}</p>
-                                    ))}
-                                </div>
-                                </a>
-                                <a href="https://www.linkedin.com/company/innovative-propulsion-laboratory/" target="_blank" rel="noopener noreferrer">
-                                <div className="snap-center focus:outline-none bg-zinc-800/60 rounded-lg p-8 relative hover:bg-zinc-800/80 hover:scale-95 transition-transform hover:border">
-                                    <h3 className="text-2xl font-bold mb-2">{translations[language].ipl}</h3>
-                                    <img className="absolute top-0 right-0 m-4" src="linkedin.svg" alt="Github" width="30" height="30" />
-                                    <p className="text-sm mb-4 font-bold ">Septembre 2022 - Aujourd'hui</p>
-                                    <p className="mb-2">{translations[language].iplDescription}</p>
-                                    <p className="font-semibold">{translations[language].engineBayMember}</p>
-                                    {(translations[language].engineBayDetails as string[]).map((detail, index) => (
-                                        <p key={index}>{detail}</p>
-                                    ))}
-                                </div>
-                                </a>
+            {/* Associative Projects Section */}
+            <section id="associative" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 animate-fadeIn flex flex-col justify-center">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 section-heading">{translations[language].associativeProjects}</h2>
+                <div className="space-y-8">
+                    <a href="https://www.linkedin.com/company/ipsa-racing-team/" target="_blank" rel="noopener noreferrer" className="block">
+                        <div className="card p-6 md:p-8 relative hover:scale-95 transition-transform">
+                            <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].ipsaRacingTeam}</h3>
+                            <img className="absolute top-0 right-0 m-4" src="linkedin.svg" alt="LinkedIn" width="30" height="30" />
+                            <p className="text-xs md:text-sm mb-4 font-bold text-gray-400">Septembre 2022 - Aujourd'hui</p>
+                            <p className="text-sm md:text-base mb-6 text-gray-300">{translations[language].ipsaRacingTeamDescription}</p>
+                            <p className="text-sm md:text-base font-semibold text-gray-200">{translations[language].systemLead}</p>
+                            <div className="card-inner space-y-2">
+                                {(translations[language].systemLeadDetails as string[]).map((detail, index) => (
+                                    <p key={index} className="text-sm md:text-base text-gray-200">{detail}</p>
+                                ))}
                             </div>
-                        </section>
-                    </main>
-                </main>
+                        </div>
+                    </a>
+                    
+                    <a href="https://www.linkedin.com/company/innovative-propulsion-laboratory/" target="_blank" rel="noopener noreferrer" className="block">
+                        <div className="card p-6 md:p-8 relative hover:scale-95 transition-transform">
+                            <h3 className="text-xl md:text-2xl font-bold mb-3 gradient-text">{translations[language].ipl}</h3>
+                            <img className="absolute top-0 right-0 m-4" src="linkedin.svg" alt="LinkedIn" width="30" height="30" />
+                            <p className="text-xs md:text-sm mb-4 font-bold text-gray-400">Septembre 2022 - Aujourd'hui</p>
+                            <p className="text-sm md:text-base mb-6 text-gray-300">{translations[language].iplDescription}</p>
+                            <p className="text-sm md:text-base font-semibold text-gray-200">{translations[language].engineBayMember}</p>
+                            <div className="card-inner space-y-2">
+                                {(translations[language].engineBayDetails as string[]).map((detail, index) => (
+                                    <p key={index} className="text-sm md:text-base text-gray-200">{detail}</p>
+                                ))}
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </section>
-                                {/* Pied de page - Informations de contact */}
-            <footer id="contact" className="snap-center flex flex-col justify-center min-h-screen mb-8 md:mb-12 container animate-fadeIn animate-slideIn">
-                <h2 className="text-2xl md:text-3xl font-semibold mb-6 md:mb-16">{translations[language].contactMe} :</h2>
-                <div className='flex flex-col lg:flex-row justify-center items-center space-y-8 lg:space-y-0 lg:space-x-8'>
-                    <div className="flex-1 flex justify-center items-center -mb-1 lg:mb-0 hover:scale-95">
-                        <a href="mailto:antoine.castel@ipsa.fr">
-                            <img className="mr-2" src="mail.svg" alt="Email" width="36" height="36"/>
+
+            {/* Contact Section */}
+            <footer id="contact" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 animate-fadeIn flex flex-col justify-center relative">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 section-heading">{translations[language].contactMe}</h2>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="flex items-center justify-center space-x-4">
+                        <a href="mailto:antoine.castel@ipsa.fr" className="hover:scale-95 transition-transform">
+                            <img src="mail.svg" alt="Email" width="36" height="36" />
                         </a>
-                        <a href="mailto:antoine.castel@student-cs.fr">
-                            <p> antoine.castel@student-cs.fr</p>
+                        <a href="mailto:antoine.castel@student-cs.fr" className="text-sm md:text-base text-gray-300">antoine.castel@student-cs.fr</a>
+                    </div>
+                    <div className="flex items-center justify-center space-x-4">
+                        <img src="phone.svg" alt="Phone" width="32" height="32" />
+                        <p className="text-sm md:text-base text-gray-300">+33 6 89 91 58 00</p>
+                    </div>
+                    <div className="flex items-center justify-center space-x-4">
+                        <a href="https://www.linkedin.com/in/antoinecastel/" target="_blank" rel="noopener noreferrer" className="hover:scale-95 transition-transform">
+                            <img src="linkedin.svg" alt="LinkedIn" width="35" height="35" />
                         </a>
+                        <a href="https://www.linkedin.com/in/antoinecastel/" target="_blank" rel="noopener noreferrer" className="text-sm md:text-base text-gray-300">LinkedIn</a>
                     </div>
-                    <div className="flex-1 flex justify-center items-center lg:mb-0">
-                        <img className="mr-2" src="phone.svg" alt="Phone" width="32" height="32"/>
-                        <p> +33 6 89 91 58 00</p>
-                    </div>
-                    <div className="flex-1 flex justify-center items-center lg:mb-0 hover:scale-95">
-                        <a href="https://www.linkedin.com/in/antoinecastel/" target="_blank" rel="noopener noreferrer">
-                            <img className="mr-2" src="linkedin.svg" alt="LinkedIn" width="35" height="35" />
-                        </a>
-                        <p><a href="https://www.linkedin.com/in/antoinecastel/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
-                    </div>
+                </div>
+                
+                {/* Scroll to top button - now absolutely positioned */}
+                <div className="absolute bottom-16 left-0 right-0 flex justify-center">
+                    <button 
+                        onClick={() => scrollToSection(0)}
+                        className="btn inline-flex items-center justify-center px-6 py-3 bg-zinc-800/90 hover:bg-zinc-700/90 rounded-full shadow-lg transition-transform hover:scale-105"
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-2">
+                            <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        {language === "fr" ? "Retour en haut" : "Back to top"}
+                    </button>
                 </div>
             </footer>
         </main>

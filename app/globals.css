@@ -4,24 +4,34 @@
 
 :root {
   --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 0, 0, 0;
+  --background-start-rgb: 8, 8, 12;
+  --background-end-rgb: 14, 14, 20;
+  --accent-color: 99, 102, 241;
+  --card-bg: 30, 30, 40;
+  --card-hover: 40, 40, 55;
+  --card-accent: 45, 45, 60;
+  --terminal-bg: 16, 16, 24;
+}
+
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
 }
 
 html, body {
   margin: 0;
   padding: 0;
-  overflow: hidden; 
+  scroll-behavior: smooth;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
-      transparent,
+      rgb(var(--background-start-rgb)),
       rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    );
+  font-family: 'Inter', sans-serif;
 }
 
 .hide-scroll-bar {
@@ -52,11 +62,174 @@ body {
     to { transform: translateY(0); opacity: 1; }
 }
 
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0) translateX(-50%);
+  }
+  40% {
+    transform: translateY(-20px) translateX(-50%);
+  }
+  60% {
+    transform: translateY(-10px) translateX(-50%);
+  }
+}
+
 .animate-fadeIn {
     animation: fadeIn 1s ease-in-out;
 }
 
 .animate-slideIn {
     animation: slideIn 1s ease-in-out;
+}
+
+.animate-pulse-slow {
+    animation: pulse 3s infinite ease-in-out;
+}
+
+.card {
+    @apply bg-opacity-90 backdrop-blur-sm rounded-xl shadow-xl transition-all duration-300 hover:shadow-2xl border border-opacity-10 border-white;
+    background-color: rgba(var(--card-bg), 0.7);
+}
+
+.card:hover {
+    background-color: rgba(var(--card-hover), 0.8);
+    transform: translateY(-5px);
+}
+
+.card-inner {
+    @apply rounded-lg p-4;
+    background-color: rgba(var(--card-accent), 0.4);
+}
+
+.terminal-container {
+    @apply rounded-xl shadow-2xl overflow-hidden border border-opacity-20 border-white;
+    background-color: rgba(var(--terminal-bg), 0.85);
+    backdrop-filter: blur(10px);
+}
+
+.terminal-header {
+    @apply h-8 flex items-center px-4;
+    background-color: rgba(40, 40, 50, 0.9);
+}
+
+.terminal-dot {
+    @apply w-3 h-3 rounded-full mr-2;
+}
+
+.section-heading {
+    @apply font-bold relative inline-block mb-8;
+}
+
+.section-heading::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 40%;
+    height: 3px;
+    background-color: rgb(var(--accent-color));
+    border-radius: 2px;
+}
+
+.btn {
+    @apply px-6 py-2 rounded-full font-medium transition-all duration-300 flex items-center justify-center;
+    background-color: rgba(var(--accent-color), 0.2);
+    border: 1px solid rgba(var(--accent-color), 0.3);
+}
+
+.btn:hover {
+    background-color: rgba(var(--accent-color), 0.3);
+    transform: translateY(-2px);
+}
+
+.skill-badge {
+    @apply px-3 py-1 rounded-full text-sm font-medium m-1;
+    background-color: rgba(var(--accent-color), 0.15);
+    border: 1px solid rgba(var(--accent-color), 0.2);
+}
+
+.tech-icon {
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+}
+
+.gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400;
+}
+
+.snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Styles pour le scroll-down indicator - maintenant masqué sur mobile */
+.scroll-down-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: bounce 2s infinite;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* Masquer la flèche sur mobile */
+@media (max-width: 768px) {
+  .scroll-down-indicator {
+    display: none;
+  }
+}
+
+/* Navigation dots - optimisé pour mobile et desktop */
+.nav-dots {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 40;
+}
+
+/* Version mobile de la navigation */
+@media (max-width: 768px) {
+  .nav-dots {
+    bottom: 1rem;
+    top: auto;
+    right: 50%;
+    transform: translateX(50%);
+    flex-direction: row;
+    gap: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 1rem;
+    padding: 0.5rem;
+    backdrop-filter: blur(4px);
+  }
+  
+  .nav-dot {
+    width: 0.5rem !important;
+    height: 0.5rem !important;
+  }
+}
+
+.nav-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.nav-dot.active {
+  background-color: rgb(var(--accent-color));
+  transform: scale(1.5);
+  box-shadow: 0 0 10px rgba(var(--accent-color), 0.7);
 }
 

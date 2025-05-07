@@ -321,6 +321,7 @@ export default function Home() {
     const inputRef = useRef<HTMLInputElement>(null);
     const [activeSectionIndex, setActiveSectionIndex] = useState(0);
     const sectionRefs = useRef<Array<HTMLElement | null>>([]);
+    const mainRef = useRef<HTMLElement>(null);
 
     // Liste des sections pour la navigation
     const sections = [
@@ -340,6 +341,9 @@ export default function Home() {
         const sectionElements = sections.map(id => document.getElementById(id));
         sectionRefs.current = sectionElements;
 
+        // Détection du mode mobile
+        const isMobile = window.innerWidth <= 768;
+        
         sectionElements.forEach((section, index) => {
             if (!section) return;
 
@@ -349,7 +353,12 @@ export default function Home() {
                         setActiveSectionIndex(index);
                     }
                 },
-                { threshold: 0.5 } // Déclencher lorsque 50% de la section est visible
+                { 
+                    // Threshold plus bas sur mobile pour une meilleure détection
+                    threshold: isMobile ? 0.2 : 0.5,
+                    // Marge d'intersection plus grande sur mobile
+                    rootMargin: isMobile ? "-10% 0px" : "0px"
+                }
             );
 
             observer.observe(section);
@@ -370,7 +379,23 @@ export default function Home() {
     const scrollToSection = (index: number) => {
         const section = sectionRefs.current[index];
         if (section) {
-            section.scrollIntoView({ behavior: 'smooth' });
+            // Utiliser la méthode scrollIntoView avec options pour une meilleure compatibilité mobile
+            section.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start',
+                inline: 'nearest'
+            });
+            
+            // Sur mobile, ajouter un léger décalage pour compenser d'éventuels problèmes
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: section.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+            }
         }
     };
 
@@ -461,9 +486,57 @@ export default function Home() {
         }
     }
     
+    // Détection du swipe sur mobile
+    useEffect(() => {
+        let touchStartY = 0;
+        let touchEndY = 0;
+        
+        const handleTouchStart = (e: TouchEvent) => {
+            touchStartY = e.touches[0].clientY;
+        };
+        
+        const handleTouchEnd = (e: TouchEvent) => {
+            touchEndY = e.changedTouches[0].clientY;
+            handleSwipe();
+        };
+        
+        const handleSwipe = () => {
+            // Seuil de distance pour considérer un swipe
+            const minSwipeDistance = 100;
+            
+            // Calculer la distance du swipe
+            const swipeDistance = touchStartY - touchEndY;
+            
+            // Si la distance du swipe est suffisante
+            if (Math.abs(swipeDistance) > minSwipeDistance) {
+                // Swipe vers le bas
+                if (swipeDistance < 0 && activeSectionIndex > 0) {
+                    scrollToSection(activeSectionIndex - 1);
+                }
+                // Swipe vers le haut
+                else if (swipeDistance > 0 && activeSectionIndex < sections.length - 1) {
+                    scrollToSection(activeSectionIndex + 1);
+                }
+            }
+        };
+        
+        // Ajouter les écouteurs d'événements
+        if (typeof window !== 'undefined') {
+            const main = mainRef.current || document.querySelector('main');
+            if (main) {
+                main.addEventListener('touchstart', handleTouchStart);
+                main.addEventListener('touchend', handleTouchEnd);
+                
+                return () => {
+                    main.removeEventListener('touchstart', handleTouchStart);
+                    main.removeEventListener('touchend', handleTouchEnd);
+                };
+            }
+        }
+    }, [activeSectionIndex]);
 
     return (
-        <main className="h-screen overflow-y-scroll">
+        <main ref={mainRef} className="h-screen overflow-y-scroll overflow-x-hidden w-full">
             {/* Navigation par points - maintenant visible sur mobile aussi */}
             <nav className="nav-dots">
                 {sections.map((section, index) => (

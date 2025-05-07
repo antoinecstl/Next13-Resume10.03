@@ -16,6 +16,8 @@
 html {
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
+  overflow-x: hidden; /* Empêche le défilement horizontal */
+  width: 100%;
 }
 
 html, body {
@@ -32,6 +34,16 @@ body {
       rgb(var(--background-end-rgb))
     );
   font-family: 'Inter', sans-serif;
+  overflow-x: hidden; /* Empêche le défilement horizontal */
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+
+/* Assurer que tous les éléments ne dépassent pas de l'écran */
+main, section, div, header, footer, nav {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .hide-scroll-bar {
@@ -165,6 +177,12 @@ body {
 .snap-section {
   scroll-snap-align: start;
   scroll-snap-stop: always;
+  width: 100%;
+  min-height: 100vh; /* Assure que chaque section couvre au moins la hauteur de l'écran */
+  position: relative; /* Aide à la détection d'intersection */
+  display: flex; /* Pour assurer une meilleure structure */
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* Styles pour le scroll-down indicator - maintenant masqué sur mobile */
@@ -208,13 +226,33 @@ body {
     gap: 0.5rem;
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 1rem;
-    padding: 0.5rem;
+    padding: 0.5em; 
     backdrop-filter: blur(4px);
+    width: auto;
+    max-width: 90%;
+    justify-content: center;
   }
   
   .nav-dot {
     width: 0.5rem !important;
     height: 0.5rem !important;
+    flex-shrink: 0;
+    margin: 0 0.10rem;
+  }
+
+  /* Amélioration de l'état actif sur mobile */
+  .nav-dot.active {
+    transform: scale(1.6) !important; /* Plus apparent sur mobile */
+    box-shadow: 0 0 12px rgba(var(--accent-color), 0.8) !important;
+    background-color: rgb(var(--accent-color)) !important; /* Forcer la couleur d'accent */
+    z-index: 2; /* S'assurer que le point actif est au-dessus des autres */
+  }
+
+  /* Amélioration du snap */
+  .snap-section {
+    scroll-snap-align: center; /* Mieux pour mobile */
+    scroll-margin-top: 5px; /* Aide au scroll snap sur certains navigateurs mobiles */
+    min-height: 101vh; /* Légèrement plus grand pour éviter les problèmes de détection */
   }
 }
 
@@ -225,6 +263,17 @@ body {
   border-radius: 50%;
   transition: all 0.3s ease;
   cursor: pointer;
+  position: relative; /* Pour permettre un pseudo-élément qui agrandit la zone cliquable */
+}
+
+.nav-dot::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+  border-radius: 50%;
 }
 
 .nav-dot.active {

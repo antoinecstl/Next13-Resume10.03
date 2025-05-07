@@ -290,7 +290,7 @@ export default function ChatBox() {
   };
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 max-w-full">
+    <div className="fixed bottom-5 right-4 z-50 max-w-full">
       {isOpen ? (
         <div 
           className={`w-[calc(100vw-2rem)] sm:w-96 h-[32rem] sm:h-[32rem] terminal-container backdrop-blur-md flex flex-col ${chatBoxClass}`}

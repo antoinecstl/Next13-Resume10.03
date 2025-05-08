@@ -485,55 +485,6 @@ export default function Home() {
             carousel.scrollLeft += scrollAmount * direction;
         }
     }
-    
-    // Détection du swipe sur mobile
-    useEffect(() => {
-        let touchStartY = 0;
-        let touchEndY = 0;
-        
-        const handleTouchStart = (e: TouchEvent) => {
-            touchStartY = e.touches[0].clientY;
-        };
-        
-        const handleTouchEnd = (e: TouchEvent) => {
-            touchEndY = e.changedTouches[0].clientY;
-            handleSwipe();
-        };
-        
-        const handleSwipe = () => {
-            // Seuil de distance pour considérer un swipe
-            const minSwipeDistance = 100;
-            
-            // Calculer la distance du swipe
-            const swipeDistance = touchStartY - touchEndY;
-            
-            // Si la distance du swipe est suffisante
-            if (Math.abs(swipeDistance) > minSwipeDistance) {
-                // Swipe vers le bas
-                if (swipeDistance < 0 && activeSectionIndex > 0) {
-                    scrollToSection(activeSectionIndex - 1);
-                }
-                // Swipe vers le haut
-                else if (swipeDistance > 0 && activeSectionIndex < sections.length - 1) {
-                    scrollToSection(activeSectionIndex + 1);
-                }
-            }
-        };
-        
-        // Ajouter les écouteurs d'événements
-        if (typeof window !== 'undefined') {
-            const main = mainRef.current || document.querySelector('main');
-            if (main) {
-                main.addEventListener('touchstart', handleTouchStart);
-                main.addEventListener('touchend', handleTouchEnd);
-                
-                return () => {
-                    main.removeEventListener('touchstart', handleTouchStart);
-                    main.removeEventListener('touchend', handleTouchEnd);
-                };
-            }
-        }
-    }, [activeSectionIndex]);
 
     return (
         <main ref={mainRef} className="h-screen overflow-y-scroll overflow-x-hidden w-full">

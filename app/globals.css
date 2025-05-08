@@ -174,17 +174,6 @@ main, section, div, header, footer, nav {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400;
 }
 
-.snap-section {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  width: 100%;
-  min-height: 100vh; /* Assure que chaque section couvre au moins la hauteur de l'écran */
-  position: relative; /* Aide à la détection d'intersection */
-  display: flex; /* Pour assurer une meilleure structure */
-  flex-direction: column;
-  justify-content: center;
-}
-
 /* Styles pour le scroll-down indicator - maintenant masqué sur mobile */
 .scroll-down-indicator {
   position: absolute;
@@ -246,13 +235,6 @@ main, section, div, header, footer, nav {
     box-shadow: 0 0 12px rgba(var(--accent-color), 0.8) !important;
     background-color: rgb(var(--accent-color)) !important; /* Forcer la couleur d'accent */
     z-index: 2; /* S'assurer que le point actif est au-dessus des autres */
-  }
-
-  /* Amélioration du snap */
-  .snap-section {
-    scroll-snap-align: center; /* Mieux pour mobile */
-    scroll-margin-top: 5px; /* Aide au scroll snap sur certains navigateurs mobiles */
-    min-height: 101vh; /* Légèrement plus grand pour éviter les problèmes de détection */
   }
 }
 

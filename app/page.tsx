@@ -550,7 +550,7 @@ export default function Home() {
             </nav>
 
             {/* Terminal Section */}
-            <section id="home" className="h-screen snap-section flex flex-col justify-center px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 relative" onClick={() => inputRef.current?.focus()}>
+            <section id="home" className="h-screen flex flex-col justify-center px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 relative" onClick={() => inputRef.current?.focus()}>
                 {backgroundImages.map(img => React.cloneElement(img, {
                     className: `${img.props.className} tech-icon`
                 }))}
@@ -610,7 +610,7 @@ export default function Home() {
             </section>
 
             {/* Profile Section */}
-            <section id="whois" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 animate-fadeIn flex flex-col justify-center">
+            <section id="whois" className="min-h-screen px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 animate-fadeIn flex flex-col justify-center">
                 {/* Profile Header */}
                 <header className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 py-16 md:py-24">
                     <div className="relative">
@@ -638,7 +638,7 @@ export default function Home() {
             </section>
                 
             {/* Experience Section */}
-            <section id="experience" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 flex flex-col justify-center">
+            <section id="experience" className="min-h-screen  px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 flex flex-col justify-center">
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 section-heading">{translations[language].experience}</h2>
                 <div className="space-y-8">
                     <div className="card p-6 md:p-8">
@@ -679,7 +679,7 @@ export default function Home() {
             </section>
                 
             {/* Education Section */}
-            <section id="formation" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 flex flex-col justify-center">
+            <section id="formation" className="min-h-screen  px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 flex flex-col justify-center">
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 section-heading">{translations[language].education}</h2>
                 <div className="space-y-8">
                     <div className="card p-6 md:p-8">
@@ -729,7 +729,7 @@ export default function Home() {
             </section>
                 
             {/* Skills Section */}
-            <section id="competence" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 flex flex-col justify-center">
+            <section id="competence" className="min-h-screen  px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 flex flex-col justify-center">
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 section-heading">{translations[language].skills}</h2>
                 <div className="relative">
                     <button className="-mx-8 absolute left-0 top-11 md:top-16 transform -translate-y-1/2" onClick={() => scrollCarousel(-1, 'programming-carousel')}>
@@ -878,7 +878,7 @@ export default function Home() {
             </section>
             
             {/* Projects Section */}
-            <section id="project" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 animate-fadeIn flex flex-col justify-center">
+            <section id="project" className="min-h-screen  px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 animate-fadeIn flex flex-col justify-center">
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 section-heading">{translations[language].personalProjects}</h2>
                 <div className="space-y-8">
                     <a href="https://github.com/antoinecstl/Sharips-Deploy-Next13" target="_blank" rel="noopener noreferrer" className="block">
@@ -917,7 +917,7 @@ export default function Home() {
             </section>
 
             {/* Associative Projects Section */}
-            <section id="associative" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 animate-fadeIn flex flex-col justify-center">
+            <section id="associative" className="min-h-screen  px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 animate-fadeIn flex flex-col justify-center">
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 section-heading">{translations[language].associativeProjects}</h2>
                 <div className="space-y-8">
                     <a href="https://www.linkedin.com/company/ipsa-racing-team/" target="_blank" rel="noopener noreferrer" className="block">
@@ -953,7 +953,7 @@ export default function Home() {
             </section>
 
             {/* Contact Section */}
-            <footer id="contact" className="min-h-screen snap-section px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 animate-fadeIn flex flex-col justify-center relative">
+            <footer id="contact" className="min-h-screen  px-4 sm:px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pb-16 md:pb-32 animate-fadeIn flex flex-col justify-center relative">
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 section-heading">{translations[language].contactMe}</h2>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="flex items-center justify-center space-x-4">

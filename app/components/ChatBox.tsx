@@ -163,9 +163,8 @@ export default function ChatBox() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentMessage(e.target.value);
   };
-
-  // Appeler l'Edge Function avec la requête de l'utilisateur
-  const callOpenAIEdgeFunction = async (userQuery: string) => {
+  // Appeler l'Edge Function avec la requête de l'utilisateur (version streaming)
+  const callOpenAIEdgeFunction = async (userQuery: string, onChunkReceived: (chunk: string) => void) => {
     try {  
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -184,15 +183,61 @@ export default function ChatBox() {
         throw new Error(`Erreur Edge: ${response.status}`);
       }
       
-      // La réponse est maintenant un objet JSON contenant la réponse et éventuellement un nouveau thread_id
-      const responseData = await response.json();
-      
-      // Si un nouveau thread_id a été créé, le stocker
-      if (responseData.thread_id) {
-        setThreadId(responseData.thread_id);
+      // Vérifier que nous avons bien un stream comme réponse
+      if (!response.body) {
+        throw new Error("Le corps de la réponse est vide");
       }
       
-      return cleanAIResponse(responseData.reply);
+      // Traiter la réponse en tant que stream SSE (Server-Sent Events)
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let partialData = '';
+      let fullResponse = '';
+      
+      while (true) {
+        const { done, value } = await reader.read();
+        
+        if (done) {
+          break;
+        }
+        
+        // Décoder les chunks du stream
+        const chunk = decoder.decode(value, { stream: true });
+        // Combiner avec les données partielles précédentes
+        partialData += chunk;
+        
+        // Traiter les événements SSE complets
+        const lines = partialData.split('\n\n');
+        partialData = lines.pop() || '';
+        
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const eventData = JSON.parse(line.slice(6)); // Enlever "data: "
+              
+              // Si on reçoit un contenu textuel
+              if (eventData.content) {
+                fullResponse += eventData.content;
+                onChunkReceived(cleanAIResponse(eventData.content));
+              }
+              
+              // Si on reçoit un thread ID
+              if (eventData.threadId) {
+                setThreadId(eventData.threadId);
+              }
+              
+              // Si on a une erreur dans le stream
+              if (eventData.error) {
+                throw new Error(eventData.error);
+              }
+            } catch (e) {
+              console.error("Erreur lors du parsing des données SSE:", e);
+            }
+          }
+        }
+      }
+      
+      return cleanAIResponse(fullResponse);
     } catch (error) {
       console.error("Erreur lors de l'appel à l'API:", error);
       return language === 'fr' ? 
@@ -200,18 +245,17 @@ export default function ChatBox() {
         "Sorry, I couldn't process your request. Please try again later.";
     }
   };
-
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (currentMessage.trim() === "") return;
-    
-    // Add user message
+      // Add user message
+    const timestamp = Date.now();
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: `user_${timestamp}_${Math.random().toString(36).substring(2, 9)}`,
       content: currentMessage,
       sender: 'user',
-      timestamp: Date.now()
+      timestamp: timestamp
     };
     
     const updatedMessages = [...messages, userMessage];
@@ -219,30 +263,57 @@ export default function ChatBox() {
     setCurrentMessage("");
     setIsLoading(true);
     
+    // Créer un message temporaire pour l'assistant qui sera mis à jour avec le streaming
+    const assistantMessageId = `assistant_${timestamp}_${Math.random().toString(36).substring(2, 9)}`;
+    const assistantMessage: Message = {
+      id: assistantMessageId,
+      content: "",
+      sender: 'assistant',
+      timestamp: timestamp
+    };
+    
+    // Ajouter le message vide de l'assistant immédiatement
+    setMessages([...updatedMessages, assistantMessage]);
+    
     try {
-      // Appeler l'API Edge Function
-      const aiResponse = await callOpenAIEdgeFunction(currentMessage);
-      
-      const assistantMessage: Message = {
-        id: Date.now().toString(),
-        content: aiResponse,
-        sender: 'assistant',
-        timestamp: Date.now()
+      // Callback pour mettre à jour le message au fur et à mesure que des morceaux arrivent
+      const onChunkReceived = (chunk: string) => {
+        setMessages((prevMessages) => {
+          // Trouver et mettre à jour le message de l'assistant
+          return prevMessages.map((msg) => {
+            if (msg.id === assistantMessageId) {
+              return {
+                ...msg,
+                // Ajouter le nouveau morceau au contenu existant
+                content: msg.content + chunk
+              };
+            }
+            return msg;
+          });
+        });
       };
       
-      setMessages([...updatedMessages, assistantMessage]);
+      // Appeler l'API Edge Function avec streaming
+      await callOpenAIEdgeFunction(currentMessage, onChunkReceived);
+      
+      // Le contenu complet est déjà mis à jour dans la state via le callback
     } catch (error) {
-      // En cas d'erreur, ajouter un message d'erreur
-      const errorMessage: Message = {
-        id: Date.now().toString(),
-        content: language === 'fr' ? 
-          "Désolé, une erreur s'est produite. Veuillez réessayer." : 
-          "Sorry, an error occurred. Please try again.",
-        sender: 'assistant',
-        timestamp: Date.now()
-      };
+      // En cas d'erreur, mettre à jour le message de l'assistant avec le message d'erreur
+      setMessages((prevMessages) => {
+        return prevMessages.map((msg) => {
+          if (msg.id === assistantMessageId) {
+            return {
+              ...msg,
+              content: language === 'fr' ? 
+                "Désolé, une erreur s'est produite. Veuillez réessayer." : 
+                "Sorry, an error occurred. Please try again."
+            };
+          }
+          return msg;
+        });
+      });
       
-      setMessages([...updatedMessages, errorMessage]);
+      console.error("Error in sendMessage:", error);
     } finally {
       setIsLoading(false);
     }

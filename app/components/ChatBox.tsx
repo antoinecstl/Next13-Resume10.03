@@ -103,13 +103,10 @@ export default function ChatBox() {
     
     return () => clearInterval(animationInterval);
   }, [language, messages.length]);
-
   useEffect(() => {
-    // Récupérer le threadId du localStorage s'il existe
-    const savedThreadId = localStorage.getItem('chatThreadId');
-    if (savedThreadId) {
-      setThreadId(savedThreadId);
-    }
+    // Clear threadId from localStorage on page load/reload
+    localStorage.removeItem('chatThreadId');
+    setThreadId(null);
     
     return () => {
       // Nettoyer les références au thread lorsque le composant est démonté
